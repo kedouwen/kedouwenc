@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+	<ribbon startFromScratch="false">
+		<!-- 20160217精简一些不常用的功能 -->
+		<tabs>
+			<tab id="tab1" label="蝌蚪文工具箱(C#)"  visible="true" insertAfterMso="TabHome">
+				<group id="Group1"  visible="true"  label="视图">
+					<toggleButton id="ReadMode" label="阅读模式" imageMso="ViewDisplayInHighContrast" size="large"  getPressed="lijun" onAction="ReadMode" screentip="什么是阅读模式" supertip="单击进入阅读模式，从而使选择单元格时突出当前行和当前列。再次单击时可退出阅读模式" keytip="D"/>
+					<separator id="separator1"/>
+					<button id="ForDisplay" label="显示设置"   imageMso="TableSharePointListsModifyColumnsAndSettings" onAction="ForDisplay" />
+					<button id="FromHere" label="从当前开始" imageMso="SmartArtAddShapeAbove" onAction="FromHere" />
+					<!-- <button id="button5" label="显示/隐藏"  imageMso="ChartShowData" onAction="显示隐藏" /> -->
+				</group>
+
+				<group id="Group2" visible="true" getLabel="Group2getlabel">
+
+					<menu id="menu3" label="转换&#13;" imageMso="TableSharePointListsRefreshList" size="large" itemSize="normal"     >
+						<menuSeparator id="menuSeparator1" title="转换数值"/>
+						<button id="StringToNumer" label="文本型数字转数值" imageMso="ConditionalFormattingBottomNItems" onAction="StringToNumer"/>
+						<button id="NumerToString" label="数值转文本型数值" imageMso="ChangeStylesMenu" onAction="NumerToString"/>
+						<button id="FormulaToNumber" label="公式转数值" imageMso="ConditionalFormattingHighlightGreaterThan" onAction="FormulaToNumber"/>
+						<button id="UpperLowerT" label="大小写转换" imageMso="GroupMacroShowHide" onAction="UpperLowerT"/>
+						<menuSeparator id="menuSeparator2" title="转换行与列"/>
+						<button id="TranRangeByColumn" label="区域分列转换" imageMso="FieldChooser" onAction="TranRangeByColumn"/>
+						<button id="TwoDimensionalToOne" label="二维表转一维表" imageMso="CopyToPersonalCalendar" onAction="DoubleDimensionalToSingle"/>
+					</menu>
+					<separator id="separator2"/>
+
+					<menu id="menu4" label="批量删除" imageMso="ReviewDeleteComment" size="normal" itemSize="normal">
+						<button id="DelBlankRow" label="删除工作表所有的空白行&#13;" imageMso="CellsDelete" onAction="DelBlankRow"/>
+					</menu>
+
+					<menu id="menu5" label="隐藏区域" imageMso="PowerPointPageSetup" size="normal" itemSize="normal">
+						<button id="HideNoSelectRange" label="隐藏非选中区域&#13;" imageMso="AccessListTasks" onAction="HideNoSelectRange"/>
+						<button id="HideSelectRange" label="隐藏选中区域" imageMso="AccessListEvents" onAction="HideSelectRange"/>
+						<button id="CancelHideCells" label="取消隐藏所有单元格" imageMso="AccessListCustom" onAction="CancelHideCells"/>
+					</menu>
+
+					<menu id="menu6" label="合并单元格" imageMso="FieldList" size="normal" itemSize="normal">
+						<button id="MergeColumn" label="合并一列相同且相邻的单元格&#13;" imageMso="ConditionalFormattingBottomNItems" onAction="MergeColumn"/>
+					</menu>
+
+					<menu id="menu7" label="数据对比" imageMso="MultiplePages" size="normal" itemSize="normal">
+						<button id="SameAndDifferentItem" label="相同项与不同项" imageMso="FileServerTransferDatabase" onAction="SameAndDifferentItem"/>
+					</menu>
+
+					<button id="InvertSelect" label="反向选择" imageMso="PivotTableSelectLabel" onAction="InvertSelect"/>
+					<button id="PaySlip" label="一键生成工资条"  imageMso="PivotShowDetails" onAction="PaySlip"/>
+					<button id="LinkToValue" label="转换工作簿的链接为值"  imageMso="PivotTableOlapConvertToFormulas" onAction="LinkToValue"/>
+					<button id="ChWordSeg" label="中文分词/转换拼音/转换首字母" description="destest"  supertip="supertiptest"  imageMso="DropCapOptionsDialog" tag="jungege" visible="1" onAction="ChWordSeg"  />
+				</group>
+
+
+				<group id="Group3"  visible="true"  label="工作簿与工作表">
+					<menu id="menu9"  label="工作簿管理&#13;" imageMso="CopyFolder" size="large" itemSize="normal">
+						<button id="SplitWorkbook" label="拆分工作簿" imageMso="ChangeStylesMenu" onAction="SplitWorkbook"/>
+						<button id="Director" label="创建文件链接列表" imageMso="CreateEmail" onAction="Director"/>
+					</menu>
+					<menu id="menu10"  label="工作表管理&#13;" imageMso="FileSaveAsExcelXlsx" size="large" itemSize="normal">
+						<button id="SelectAllSheet" label="全选工作表&#13;" imageMso="ChartShowData" onAction="SelectAllSheet"/>
+						<button id="HideSelectSheet" label="隐藏选中工作表" imageMso="SlideMasterContentPlaceholderInsert" onAction="HideSelectSheet"/>
+						<menuSeparator id="menuSeparator3"/>
+						<button id="SheetLink" label="创建工作表链接列表" imageMso="ControlLayoutRemove" onAction="SheetLink"/>
+					</menu>
+				</group>
+        <group id="Group4"  visible="true"  label="BigData辅助 Task Pane">
+          <button id="oracle_createtablesql" label="oracle建表语句&#13;" imageMso="AdpStoredProcedureEditSql" size="large"  onAction="oracle_createtablesql"/>
+          <button id="createtjson" label="生成标准JSON&#13;" imageMso="DatasheetNewField" size="large"  onAction="createtjson"/>
+          <button id="oraclecomment" label="oracle表和字段注释&#13;" imageMso="ReviewShowAllComments" size="large"  onAction="oraclecomment"/>
+        </group>
+				<group id="Group5"  visible="true"  label="蝌蚪文">
+					<button id="Help" label="帮助&#13;" imageMso="HappyFace" size="large"  onAction="Help"/>
+				</group>
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>
+
