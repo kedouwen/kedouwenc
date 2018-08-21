@@ -63,6 +63,8 @@ namespace kedouwenc
             }
 
 
+
+
             arr = rng1.Value2;
             tablename = arr[2, 1].ToString().Split('.')[1];
 
@@ -70,8 +72,14 @@ namespace kedouwenc
             commenttable = "comment on table " + tablename + "  is '" + arr[1, 1] + "';";
             textBox1.Text = commenttable;
 
+            Int16 bt = 3;
 
-            if (regEnglish.IsMatch(arr[3, 1].ToString())) {
+            if (arr[bt, 1].ToString().Contains("字段")) {
+                bt =4;
+            }
+
+
+            if (regEnglish.IsMatch(arr[bt, 1].ToString())) {
                 columnEnglish = 1;
                 columnChinese = 2;
             }
@@ -82,7 +90,7 @@ namespace kedouwenc
             
 
 
-            for (int i = 3; i <= arr.GetUpperBound(0); i++)
+            for (int i = bt; i <= arr.GetUpperBound(0); i++)
             {               
                 commentcolumn = commentcolumn + "comment on column " + tablename + "." + arr[i, columnEnglish] + " is '" + arr[i, columnChinese] + "';\r\n";
             }

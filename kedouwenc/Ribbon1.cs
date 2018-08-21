@@ -52,18 +52,24 @@ namespace kedouwenc
             //
         }
 
-        public void ReadMode(Office.IRibbonControl control, Boolean pressed = true)
-        //阅读模式
+        /// <summary>
+        /// 阅读模式
+        /// </summary>
+        /// <param name="control"></param>
+        /// <param name="pressed"></param>
+        public void ReadMode(Office.IRibbonControl control, Boolean pressed = true)        
         {
             ispressed = pressed;
             //MessageBox.Show(Convert.ToString(Ribbon1.ispressed) + "666");
-        }   
-      
+        }
 
 
 
-        public void ForDisplay(Office.IRibbonControl control)
-        //显示设置
+        /// <summary>
+        /// 显示设置
+        /// </summary>
+        /// <param name="control"></param>
+        public void ForDisplay(Office.IRibbonControl control)       
         {
            gifid = control.Id;          
             //MessageBox.Show(gifid);
@@ -82,8 +88,11 @@ namespace kedouwenc
              }
         }
 
-        public void FromHere(Office.IRibbonControl control)
-        //从当前开始
+        /// <summary>
+        /// 从当前开始
+        /// </summary>
+        /// <param name="control"></param>
+        public void FromHere(Office.IRibbonControl control)       
         {
             Globals.ThisAddIn.Application.Goto(Globals.ThisAddIn.Application.ActiveWindow.RangeSelection.Offset, Scroll: true);           
            // Excel.Range rng =Globals.ThisAddIn.Application.ActiveWindow.RangeSelection;
@@ -91,9 +100,13 @@ namespace kedouwenc
            // rng.EntireColumn.Interior.Color = 255;
         }
 
+
+        /// <summary>
+        /// 文本型数字转数值
+        /// </summary>
+        /// <param name="control"></param>
         public void StringToNumer(Office.IRibbonControl control)
-        //文本型数字转数值
-        {
+         {
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Excel.Range rngs;
 
@@ -118,8 +131,6 @@ namespace kedouwenc
             {
                 MessageBox.Show(text: "选择的单元格没有文本区域。", caption: "提示", buttons: MessageBoxButtons.OK);
             }
-
-
             //int icount = 0;
             //foreach (Excel.Range myrng in rngs)
             //{
@@ -149,9 +160,11 @@ namespace kedouwenc
 
             Globals.ThisAddIn.Application.ScreenUpdating = true;
         }
-
-        public void NumerToString(Office.IRibbonControl control)
-        //数值转文本型数值
+        /// <summary>
+        /// 数值转文本型数值
+        /// </summary>
+        /// <param name="control"></param>
+        public void NumerToString(Office.IRibbonControl control)       
         {
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Excel.Range rng;
@@ -198,9 +211,12 @@ namespace kedouwenc
             }
             Globals.ThisAddIn.Application.ScreenUpdating = true;
         }
-
+        /// <summary>
+        /// 公式转数值
+        /// 20180329 如果公式区域不是连续的，比如合并单元格填充会存在问题
+        /// </summary>
+        /// <param name="control"></param>
         public void FormulaToNumber(Office.IRibbonControl control)
-        //公式转数值    
         {
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Excel.Range rng;            
@@ -231,10 +247,7 @@ namespace kedouwenc
             //    rng.NumberFormatLocal = "G/通用格式";
             //    rng.Value = rng.Value;                
             //}
-
-            //20180329 如果公式区域不是连续的，比如合并单元格填充会存在问题
-                       
-            
+                                    
             try
             {
                 rng = rng.SpecialCells(XlCellType.xlCellTypeFormulas, 23);
@@ -244,8 +257,7 @@ namespace kedouwenc
                     therng.NumberFormatLocal = "G/通用格式";
                     therng.Value = therng.Value;
                  }
-
-
+                
             }
             catch
             {
@@ -256,16 +268,22 @@ namespace kedouwenc
 
         }
 
-        public void UpperLowerT(Office.IRibbonControl control)
-        //大小写转换
+        /// <summary>
+        /// 大小写转换
+        /// </summary>
+        /// <param name="control"></param>
+        public void UpperLowerT(Office.IRibbonControl control)        
         {
             Form frm = new UpperLowerT();
             frm.TopMost = true;
             frm.Show();
         }
 
+        /// <summary>
+        /// 区域分列转换
+        /// </summary>
+        /// <param name="control"></param>
         public void TranRangeByColumn(Office.IRibbonControl control)
-        //区域分列转换
         {
             //On Error Resume Next
             object[,] arr;
@@ -290,8 +308,7 @@ namespace kedouwenc
             {
                 return;
             }
-
-
+            
             if (sourerange == null)
             {
                 return;
@@ -344,15 +361,29 @@ namespace kedouwenc
             targetrange.get_Resize(Information.UBound(brr) + 1, Information.UBound(brr, 2) + 1).Value2 = brr;
         }
 
+        /// <summary>
+        /// 二维表转一维表
+        /// </summary>
+        /// <param name="control"></param>
         public void DoubleDimensionalToSingle(Office.IRibbonControl control)
-        //二维表转一维表
         {
             Form frm = new DoubleDimensionalToSingle();
             frm.TopMost = true;
             frm.Show();
         }
-        public void DelBlankRow(Office.IRibbonControl control)
-        //删除空行
+
+
+
+        /// <summary>
+        /// 删除空行
+        /// rng.MergeCell 说明：True if the range contains merged cells. 
+        /// 1.选择单个合并单元格，会返回ture;
+        /// 2.选择一个区域，里面有合并单元格，会返回DBnull
+        /// 3.选择非合并单元格区域，返回true;
+        /// 
+        /// </summary>
+        /// <param name="control"></param>
+        public void DelBlankRow(Office.IRibbonControl control)      
         {
             // 有一个大坑，就是单元格区域复制给数组，在本地窗口里面看 数组是0维开始，其实从1开始的。
             //On Error Resume Next VBConversions Warning: On Error Resume Next not supported in C#
@@ -364,8 +395,15 @@ namespace kedouwenc
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet; ;
             //将活动工作表的已用区域与第一行到最后一个非空行之间的区域的交集赋与变量rng	
             //If Globals.ThisAddIn.Application.WorksheetFunction.CountA(sht.UsedRange.Cells) = 0 Then Exit Sub
-
+            
             rng = Globals.ThisAddIn.Application.Intersect(sht.UsedRange, Globals.ThisAddIn.Application.Rows["1:" + Globals.ThisAddIn.Application.Cells.Find(What: "*", After: Globals.ThisAddIn.Application.Cells[1, 1], LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlWhole, SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlPrevious).Row]);
+                        
+            if (rng.MergeCells || rng.MergeCells ==DBNull.Value)
+            {
+                MessageBox.Show("存在合并单元格区域！！！", "友情提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Globals.ThisAddIn.Application.ScreenUpdating = true; //恢复屏幕刷新
+                return;
+            }
             arr2 = rng.Value; //将rng区域的值赋予变量arr2
             int[,] arr = new int[arr2.GetUpperBound(0), 1]; //重置数组变量Arr的维数与上、下标，其中第一维上标等于arr2的上标
             for (i = 1; i <= arr2.GetUpperBound(0); i++) //遍历数组arr2的每一行
@@ -393,11 +431,13 @@ namespace kedouwenc
             //删除空行的格式信息(空行是指最后一个非空行下方的所有行)
             Globals.ThisAddIn.Application.Rows[(Globals.ThisAddIn.Application.Cells.Find(What: "*", After: Globals.ThisAddIn.Application.Cells[1, 1], LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlWhole, SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlPrevious).Row + 1) + ":" + Globals.ThisAddIn.Application.Rows.Count].Clear();
             Globals.ThisAddIn.Application.ScreenUpdating = true; //恢复屏幕刷新
-
         }
 
-        public void HideNoSelectRange(Office.IRibbonControl control)
-        //隐藏非选中区域
+        /// <summary>
+        /// 隐藏非选中区域
+        /// </summary>
+        /// <param name="control"></param>
+        public void HideNoSelectRange(Office.IRibbonControl control)        
         {
             Excel.Range rng;
             Excel.Range myrng;
@@ -407,12 +447,10 @@ namespace kedouwenc
             Excel.Range rngdown;
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Globals.ThisAddIn.Application.ScreenUpdating = false;
-
-
+            
             myrng = Globals.ThisAddIn.Application.Selection;
             rng = sht.Cells[1, 1];
-
-
+            
             //不包含左上角
             if (myrng.Row > 1)
             {
@@ -440,8 +478,12 @@ namespace kedouwenc
             Globals.ThisAddIn.Application.ScreenUpdating = true;
         }
 
+
+        /// <summary>
+        /// 隐藏选中区域
+        /// </summary>
+        /// <param name="control"></param>
         public void HideSelectRange(Office.IRibbonControl control)
-        //隐藏选中区域
         {
             Excel.Range rng;
             rng = Globals.ThisAddIn.Application.Selection;
@@ -449,24 +491,29 @@ namespace kedouwenc
             rng.EntireRow.Hidden = true;
         }
 
-        public void CancelHideCells(Office.IRibbonControl control)
-        //取消隐藏所有单元格
+        /// <summary>
+        /// 取消隐藏所有单元格        
+        /// </summary>
+        /// <param name="control"></param>
+        public void CancelHideCells(Office.IRibbonControl control)        
         {
             Globals.ThisAddIn.Application.Cells.EntireColumn.Hidden = false;
             Globals.ThisAddIn.Application.Cells.EntireRow.Hidden = false;
         }
 
-        public void MergeColumn(Office.IRibbonControl control)
-        //合并一列相同且相邻的单元格
+        /// <summary>
+        /// 合并一列相同且相邻的单元格
+        /// 代码思路分析:
+        ///1.首先将操作对象限制为活动工作表的已用数据区域与选区的交集部分，从而避免不必要的循环
+        ///2.然后从操作区域的第二个单元格开始与上一个单元格执行比较，如相同就执行下一轮比较
+        ///3.如果单元格与其上方的单元格的值不同，那么将上面的未合并的区域(值相同的区域)复制到辅助区域中
+        ///4.接着合并辅助区域，再将辅助区域的格式复制到待合并的区域中，从而实现只合并单元格不删除数据
+        ///5.最后清除辅助区域，执行下一轮循环。
+        ///6.本例通过三方面实现代码提速：重置操作区域（Intersect）、关闭提示（DisplayAlerts）、关闭屏幕刷新（ScreenUpdating）
+        /// </summary>
+        /// <param name="control"></param>
+        public void MergeColumn(Office.IRibbonControl control)        
         {
-            //代码思路分析:
-            //首先将操作对象限制为活动工作表的已用数据区域与选区的交集部分，从而避免不必要的循环
-            //然后从操作区域的第二个单元格开始与上一个单元格执行比较，如相同就执行下一轮比较
-            //如果单元格与其上方的单元格的值不同，那么将上面的未合并的区域(值相同的区域)复制到辅助区域中
-            //接着合并辅助区域，再将辅助区域的格式复制到待合并的区域中，从而实现只合并单元格不删除数据
-            //最后清除辅助区域，执行下一轮循环。
-            //本例通过三方面实现代码提速：重置操作区域（Intersect）、关闭提示（DisplayAlerts）、关闭屏幕刷新（ScreenUpdating）
-
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Excel.Range rng;
             Excel.Range rg;
@@ -520,13 +567,16 @@ namespace kedouwenc
             rngs[1].Select();
         }
 
-        public void SameAndDifferentItem(Office.IRibbonControl control)
-        //相同项与不同项
+        /// <summary>
+        /// 相同项与不同项
+        /// </summary>
+        /// <param name="control"></param>
+        public void SameAndDifferentItem(Office.IRibbonControl control)        
         {
             Form frm = new SameAndDifferentItem();
             frm.TopMost = true;
             frm.Show();
-          //  frm.ShowDialog();
+            //frm.ShowDialog();
              for (int i = 5;i <= 9;i++ )
             {
                 frm.Controls["Button" + i].Enabled = false;
@@ -534,8 +584,11 @@ namespace kedouwenc
         
         }
 
-        public void InvertSelect(Office.IRibbonControl control)
-        //反向选择
+        /// <summary>
+        /// 反向选择
+        /// </summary>
+        /// <param name="control"></param>
+        public void InvertSelect(Office.IRibbonControl control)        
         {
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             //如果选择的对象不是单元格，那么提示用户，然后结束过程
@@ -582,8 +635,11 @@ namespace kedouwenc
 
         }
 
-        public void PaySlip(Office.IRibbonControl control)
-        //一键生成工资条
+        /// <summary>
+        /// 一键生成工资条
+        /// </summary>
+        /// <param name="control"></param>
+        public void PaySlip(Office.IRibbonControl control)       
         {
             //标题行数可以选择，工资数据默认只有一行。
             //On Error Resume Next VBConversions Warning: On Error Resume Next not supported in C#        
@@ -641,8 +697,11 @@ namespace kedouwenc
             
         }
 
-        public void LinkToValue(Office.IRibbonControl control)
-        // 将工作簿所有的外部链接转换成值        
+        /// <summary>
+        /// 将工作簿所有的外部链接转换成值
+        /// </summary>
+        /// <param name="control"></param>
+        public void LinkToValue(Office.IRibbonControl control)                 
         {
             //giving the error:Unable to cast object of type 'System.Object[*]' to type 'System.Object[]'！
             //This issue is caused by different .net version, before 4.0 a simple cast would work, but in C# 4.0, you will need to cast to object first.
@@ -660,8 +719,11 @@ namespace kedouwenc
             }
         }
 
-        public void ChWordSeg(Office.IRibbonControl control)
-        //中文分词
+        /// <summary>
+        /// 中文分词
+        /// </summary>
+        /// <param name="control"></param>
+        public void ChWordSeg(Office.IRibbonControl control)        
         {
            
             //MessageBox.Show(Globals.ThisAddIn.Application.AltStartupPath);
@@ -678,30 +740,19 @@ namespace kedouwenc
             //MessageBox.Show(str);
            // MessageBox.Show(AppDomain.CurrentDomain.BaseDirectory);
 
-         //   C#窗口对话框一般分为两种类型：模态类型（modal）与非模态类型（modeless）。
+           //C#窗口对话框一般分为两种类型：模态类型（modal）与非模态类型（modeless）。
             //所谓模态对话框，就是指除非采取有效的关闭手段，用户的鼠标焦点或者输入光标将一直停留在其上的对话框。form.ShowDialog();
             //非模态对话框则不会强制此种特性，用户可以在当前对话框以及其他窗口间进行切换 form.Show(); 
-
-            Form frm = new TextToPinyinForm();
-            
+            Form frm = new TextToPinyinForm();            
             frm.TopMost = true;
             frm.Show();
-
-            
-
-           
-           
         }
 
-
-
-
-
-
-
-
-        public void SplitWorkbook(Office.IRibbonControl control)
-        //拆分工作簿
+        /// <summary>
+        /// 拆分工作簿
+        /// </summary>
+        /// <param name="control"></param>
+        public void SplitWorkbook(Office.IRibbonControl control)        
         {
             //On Error Resume Next  '当程序出错时继续执行下一句
             string Pathstr; //声明变量
@@ -725,7 +776,6 @@ namespace kedouwenc
             }
 
             //如果不是“\”结尾则添加“\”
-
             if (Pathstr.Substring(Pathstr.Length - 1, 1) != "\\")
             {
                 Pathstr = Pathstr + "\\";
@@ -767,9 +817,11 @@ namespace kedouwenc
             //Interaction.Shell("EXPLORER.EXE " + Pathstr, Constants.vbNormalFocus, 0, -1); 
         }
 
-       
-        public void Director(Office.IRibbonControl control)
-        //创建文件链接列表
+        /// <summary>
+        /// 创建文件链接列表
+        /// </summary>
+        /// <param name="control"></param>
+        public void Director(Office.IRibbonControl control)        
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "请选择文件路径";
@@ -819,15 +871,20 @@ namespace kedouwenc
             
         }
 
-
-        public void SelectAllSheet(Office.IRibbonControl control)
-        //选择所有工作表
+        /// <summary>
+        /// 选择所有工作表
+        /// </summary>
+        /// <param name="control"></param>
+        public void SelectAllSheet(Office.IRibbonControl control)        
         {
             Globals.ThisAddIn.Application.ActiveWorkbook.Sheets.Select();
         }
 
-        public void HideSelectSheet(Office.IRibbonControl control)
-        //隐藏选择工作表
+        /// <summary>
+        /// 隐藏选择工作表
+        /// </summary>
+        /// <param name="control"></param>
+        public void HideSelectSheet(Office.IRibbonControl control)        
         {
             //MsgBox(Globals.ThisAddIn.Application.ActiveWorkbook.Sheets.Count)
             int count = 0;
@@ -850,8 +907,11 @@ namespace kedouwenc
             }
         }
 
-        public void SheetLink(Office.IRibbonControl control)
-        //创建工作表链接列表
+        /// <summary>
+        /// 创建工作表链接列表
+        /// </summary>
+        /// <param name="control"></param>
+        public void SheetLink(Office.IRibbonControl control)        
         {
             Globals.ThisAddIn.Application.ScreenUpdating = false; //关闭屏幕刷新
             //有错误时继续执行下一句(当没有“工作表目录”时下一句代码会出错)
@@ -882,6 +942,10 @@ namespace kedouwenc
             Globals.ThisAddIn.Application.ScreenUpdating = true; //恢复屏幕刷新
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="control"></param>
         public void oracle_createtablesql(Office.IRibbonControl control)
         {
             if (Globals.ThisAddIn.CustomTaskPanes.Contains(OracleCreateTableSqlTaskPane))
@@ -952,7 +1016,12 @@ namespace kedouwenc
         #region Ribbon Callbacks
         //Create callback methods here. For more information about adding callback methods, select the Ribbon XML item in Solution Explorer and then press F1
                
+        
         private Timer timer = new Timer();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ribbonUI"></param>
         public void Ribbon_Load(Office.IRibbonUI ribbonUI)
         {
             timer.Interval = 1000;// 一秒=1000ms,以ms为单位的
@@ -961,7 +1030,11 @@ namespace kedouwenc
             timer.Start();
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void timer_Tick(object sender, EventArgs e)
         {
             StrLabel = DateTime.Now.ToString();
