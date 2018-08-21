@@ -395,15 +395,19 @@ namespace kedouwenc
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet; ;
             //将活动工作表的已用区域与第一行到最后一个非空行之间的区域的交集赋与变量rng	
             //If Globals.ThisAddIn.Application.WorksheetFunction.CountA(sht.UsedRange.Cells) = 0 Then Exit Sub
-
             rng = Globals.ThisAddIn.Application.Intersect(sht.UsedRange, Globals.ThisAddIn.Application.Rows["1:" + Globals.ThisAddIn.Application.Cells.Find(What: "*", After: Globals.ThisAddIn.Application.Cells[1, 1], LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlWhole, SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlPrevious).Row]);
 
-            if (rng.MergeCells || rng.MergeCells == DBNull.Value)
+
+
+            if (Convert.IsDBNull(rng.MergeCells) || (!Convert.IsDBNull(rng.MergeCells) && rng.MergeCells))
             {
                 MessageBox.Show("存在合并单元格区域！！！", "友情提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Globals.ThisAddIn.Application.ScreenUpdating = true; //恢复屏幕刷新
                 return;
             }
+
+
+
             arr2 = rng.Value; //将rng区域的值赋予变量arr2
             int[,] arr = new int[arr2.GetUpperBound(0), 1]; //重置数组变量Arr的维数与上、下标，其中第一维上标等于arr2的上标
             for (i = 1; i <= arr2.GetUpperBound(0); i++) //遍历数组arr2的每一行
