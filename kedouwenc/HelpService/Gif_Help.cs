@@ -11,7 +11,7 @@ using System.Windows.Forms;
 namespace kedouwenc
 {
     public partial class Gif_Help : Form
-    {
+    {        
         public Gif_Help()
         {
             InitializeComponent();      
@@ -36,13 +36,6 @@ namespace kedouwenc
                     //  Me.PictureBox1.Image = My.Resources.Help
                     break;
             };
-
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }      
+        } 
     }
 }
