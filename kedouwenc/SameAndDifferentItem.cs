@@ -277,7 +277,7 @@ namespace kedouwenc
 
         private void button9_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            //this.Hide();
             try
             {
                 Excel.Range rng = (Excel.Range)Globals.ThisAddIn.Application.InputBox(Prompt: "请选择存放区域，选择单个单元格即可", Type: 8);

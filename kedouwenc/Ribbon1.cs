@@ -46,7 +46,9 @@ namespace kedouwenc
         internal Microsoft.Office.Tools.CustomTaskPane OracleCreateTableSqlTaskPane;
         internal Microsoft.Office.Tools.CustomTaskPane CreateJsonTaskPane;
         internal Microsoft.Office.Tools.CustomTaskPane oraclecommentTaskPane;
+        internal Microsoft.Office.Tools.CustomTaskPane jsontoarrayTaskPane;
 
+        
         public Ribbon1()
         {
             //
@@ -995,7 +997,22 @@ namespace kedouwenc
             }
         }
 
+        public void jsontoarray(Office.IRibbonControl control)
+        {
+            if (Globals.ThisAddIn.CustomTaskPanes.Contains(jsontoarrayTaskPane))
+            {
+                Globals.ThisAddIn.CustomTaskPanes.Remove(jsontoarrayTaskPane);
 
+            }
+            else
+            {
+                jsontoarrayTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(new jsontoarray(), "接口的JSON转数组");
+                jsontoarrayTaskPane.Width = 415;
+                jsontoarrayTaskPane.Visible = true;
+            }
+        }
+
+       
 
         public void Help(Office.IRibbonControl control)
         {

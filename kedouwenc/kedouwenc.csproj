@@ -237,6 +237,12 @@
     <Compile Include="DoubleDimensionalToSingle.Designer.cs">
       <DependentUpon>DoubleDimensionalToSingle.cs</DependentUpon>
     </Compile>
+    <Compile Include="jsontoarray.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="jsontoarray.Designer.cs">
+      <DependentUpon>jsontoarray.cs</DependentUpon>
+    </Compile>
     <Compile Include="Oraclecomment.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -298,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HelpService\Gif_Help.resx">
       <DependentUpon>Gif_Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="jsontoarray.resx">
+      <DependentUpon>jsontoarray.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Oraclecomment.resx">
       <DependentUpon>Oraclecomment.cs</DependentUpon>

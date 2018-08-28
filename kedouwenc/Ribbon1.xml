@@ -67,6 +67,7 @@
           <button id="oracle_createtablesql" label="oracle建表语句&#13;" imageMso="AdpStoredProcedureEditSql" size="large"  onAction="oracle_createtablesql"/>
           <button id="createtjson" label="生成标准JSON&#13;" imageMso="DatasheetNewField" size="large"  onAction="createtjson"/>
           <button id="oraclecomment" label="oracle表和字段注释&#13;" imageMso="ReviewShowAllComments" size="large"  onAction="oraclecomment"/>
+          <button id="jsontoarray" label="接口的JSON转数组&#13;" imageMso="ReviewShowAllComments" size="large"  onAction="jsontoarray"/>
         </group>
 				<group id="Group5"  visible="true"  label="蝌蚪文">
 					<button id="Help" label="帮助&#13;" imageMso="HappyFace" size="large"  onAction="Help"/>
