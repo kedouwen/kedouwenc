@@ -160,7 +160,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>AE086217805EDDBED23F2F71A0F8E27DAB46F838</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BE7EB0C31386E2501F8F7AD8E96C562621445C54</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!--
     This section specifies references for the project.
@@ -225,6 +225,7 @@
   -->
   <ItemGroup>
     <Compile Include="AddInUtilities.cs" />
+    <Compile Include="cellmeau.cs" />
     <Compile Include="CreateJson.cs">
       <SubType>UserControl</SubType>
     </Compile>

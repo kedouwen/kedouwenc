@@ -18,9 +18,13 @@ namespace kedouwenc
 {
     public partial class ThisAddIn
     {
+        
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-           Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);           
+           Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
+            cellmeau cell_meau = new cellmeau();
+            cell_meau.cellmenu();
         }
 
         void Application_SheetSelectionChange(object Sh, Excel.Range Target)
@@ -38,8 +42,7 @@ namespace kedouwenc
                 Globals.ThisAddIn.Application.EnableEvents = true; //恢复响应事件          
             }
         }
-
-
+        
         //Calling Code in an Application-Level Add-in from VBA
         private AddInUtilities utilities;
         protected override object RequestComAddInAutomationService()
@@ -49,7 +52,7 @@ namespace kedouwenc
 
             return utilities;
         }
-
+        
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
         }
