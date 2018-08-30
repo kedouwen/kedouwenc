@@ -190,10 +190,10 @@ namespace kedouwenc
         {
             string ConStr = "";
             //检测格式是否符合要求
-            if (!CheckInputText(str))
-            {
-               return "要处理的内容必须是全中文";
-            }
+            //if (!CheckInputText(str))
+            //{
+            //   return "要处理的内容必须是全中文";
+            //}
 
             //生成词典
             Entity.PinyinDictionary dict = new Entity.PinyinDictionary(@filename);
@@ -251,10 +251,10 @@ namespace kedouwenc
         {
             string ConStr = "";
             //检测格式是否符合要求
-            if (!CheckInputText(str))
-            {
-                return "要处理的内容必须是全中文";
-            }
+            //if (!CheckInputText(str))
+            //{
+            //    return "要处理的内容必须是全中文";
+            //}
 
             //生成词典
             Entity.PinyinDictionary dict = new Entity.PinyinDictionary(@filename);
@@ -310,6 +310,10 @@ namespace kedouwenc
             string[] tempstr = ConStr.Split( );
             foreach (string tempstr1 in tempstr)
             {
+                if (string.IsNullOrEmpty(tempstr1))
+                {
+                    continue;
+                }
                 ConStrABC += tempstr1.Substring(0, 1);
             }
 

@@ -14,6 +14,7 @@ namespace kedouwenc
         private Office.CommandBarPopup cell_meau;
         private Office.CommandBarButton cell_meau_btn_upper;
         private Office.CommandBarButton cell_meau_btn_lower;
+        private Office.CommandBarButton cell_meau_btn_trim;
         public void cellmenu()
         {
 
@@ -36,20 +37,31 @@ namespace kedouwenc
                 cell_meau_btn_lower = (Office.CommandBarButton)cell_meau.Controls.Add(Type: Office.MsoControlType.msoControlButton);
                 cell_meau_btn_lower.Caption = "转成小写";
                 cell_meau_btn_lower.FaceId = 81;
-                cell_meau_btn_lower.Click += Cell_meau_btn_lower_Click;             
+                cell_meau_btn_lower.Click += Cell_meau_btn_lower_Click;
+
+                cell_meau_btn_trim = (Office.CommandBarButton)cell_meau.Controls.Add(Type: Office.MsoControlType.msoControlButton);
+                cell_meau_btn_trim.Caption = "去除空格";
+                cell_meau_btn_trim.FaceId = 82;
+                cell_meau_btn_trim.Click += Cell_meau_btn_trim_Click;
+
+
 
             }
         }
 
-        private void Cell_meau_btn_lower_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
+        private void Cell_meau_btn_trim_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
             //throw new NotImplementedException();
+            TrimCase();
+        }
+
+        private void Cell_meau_btn_lower_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
+        {
             LowerCase();
         }
 
         private void cell_meau_btn_upper_Click(Office.CommandBarButton Ctrl, ref bool CancelDefault)
         {
-            //throw new NotImplementedException();           
             UpperCase();
         }
 
@@ -61,7 +73,6 @@ namespace kedouwenc
                 rng.Value2 = str.ToUpper();
             }
 
-
         }
 
         private void LowerCase()
@@ -72,9 +83,17 @@ namespace kedouwenc
                 rng.Value2 = str.ToLower();
             }
 
-
         }
 
+        private void TrimCase()
+        {
+            foreach (Excel.Range rng in Globals.ThisAddIn.Application.Selection)
+            {
+                string str = Convert.ToString(rng.Value2);
+                rng.Value2 = str.Trim().Replace(" ", "");
+            }
+
+        }
 
 
 

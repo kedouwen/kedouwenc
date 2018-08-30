@@ -4,6 +4,7 @@
 using System.Text;
 using Microsoft.International.Converters.PinYinConverter;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace kedouwenc.Helper
 {
@@ -15,8 +16,17 @@ namespace kedouwenc.Helper
         /// <param name="inputChar">简体中文单字</param>      
         public static ReadOnlyCollection<string> GetPinYinWithTone(Char inputChar)
         {
-            ChineseChar chineseChar = new ChineseChar(inputChar);
-            return chineseChar.Pinyins;
+            string patternCN = @"^[\u4e00-\u9fa5\r\n]+$";
+            if (! Regex.IsMatch(inputChar.ToString(), patternCN))
+            {
+                return new ReadOnlyCollection<string>(inputChar.ToString().Split(' '));
+            }
+            else {
+                ChineseChar chineseChar = new ChineseChar(inputChar);
+                return chineseChar.Pinyins;
+            }
+
+           
         }
 
         /// <summary>
