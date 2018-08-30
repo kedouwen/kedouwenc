@@ -279,7 +279,14 @@ namespace kedouwenc
                 if (word.Length == 1 && !dict.Dictionary.ContainsKey(word))
                 {
                     //如果词典中不包含该中文单字，就要从微软的dll库读取拼音
-                  pinyin = Helper.PinyinConvert.GetFirstPinYinCount(word.ToCharArray()[0]).ToLower();
+                    if (!CheckInputText(word))
+                       {
+                        pinyin = word;
+                       }
+                      else
+                    { 
+                      pinyin = Helper.PinyinConvert.GetFirstPinYinCount(word.ToCharArray()[0]).ToLower();
+                    }
                 }
                 else
                 {
@@ -288,11 +295,11 @@ namespace kedouwenc
                 }
 
                 //但如果不需要声调，还必须去掉声调
-                if (!checkBoxWithTone.Checked)
-                {
-                    //这个正则表达式表示，去掉字符串中的数字
-                    pinyin = Regex.Replace(pinyin, @"\d", "");
-                }
+                //if (!checkBoxWithTone.Checked)
+                //{
+                //    //这个正则表达式表示，去掉字符串中的数字
+                //    pinyin = Regex.Replace(pinyin, @"\d", "");
+                //}
 
                 //将拼音显示出来
                 ConStr += pinyin;
