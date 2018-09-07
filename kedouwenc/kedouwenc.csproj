@@ -272,6 +272,7 @@
     <Compile Include="oracle_createtablesql.Designer.cs">
       <DependentUpon>oracle_createtablesql.cs</DependentUpon>
     </Compile>
+    <Compile Include="RangeSelectHelper.cs" />
     <Compile Include="SameAndDifferentItem.cs">
       <SubType>Form</SubType>
     </Compile>

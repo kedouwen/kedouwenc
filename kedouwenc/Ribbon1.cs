@@ -11,6 +11,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Forms; //命名空间引入；
 using Microsoft.VisualBasic;//可以引用VB.NET中的IsNumberic等函数
 
+
 //return跳出方法
 //break跳出循环
 
@@ -49,6 +50,9 @@ namespace kedouwenc
         internal Microsoft.Office.Tools.CustomTaskPane jsontoarrayTaskPane;
 
         
+
+
+
         public Ribbon1()
         {
             //
@@ -118,8 +122,8 @@ namespace kedouwenc
 
             //如果没有交集，那么结束过程
             if (rngs == null)
-            {
-                MessageBox.Show("请不要选择空白区域", "友情提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {                
+                RangeSelectHelper.blankrange();
                 return;
             }
 
@@ -131,7 +135,7 @@ namespace kedouwenc
             }
             catch
             {
-                MessageBox.Show(text: "选择的单元格没有文本区域。", caption: "提示", buttons: MessageBoxButtons.OK);
+                RangeSelectHelper.textrange();
             }
             //int icount = 0;
             //foreach (Excel.Range myrng in rngs)
@@ -162,6 +166,7 @@ namespace kedouwenc
 
             Globals.ThisAddIn.Application.ScreenUpdating = true;
         }
+
         /// <summary>
         /// 数值转文本型数值
         /// </summary>
@@ -171,17 +176,16 @@ namespace kedouwenc
             Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
             Excel.Range rng;
             object[,] arr; //单元格区域的转化的二维数组
-            // myudf udf = new myudf();
+            //myudf udf = new myudf();
 
             Globals.ThisAddIn.Application.ScreenUpdating = false;
             rng = Globals.ThisAddIn.Application.Intersect(Globals.ThisAddIn.Application.Selection, sht.UsedRange);
-            arr = rng.Value;
-            //MessageBox.Show(Convert.ToString(arr.GetUpperBound(0) + "-" + arr.GetUpperBound(1)));
+            arr = rng.Value;            
 
             //如果没有交集，那么结束过程
             if (rng == null)
-            {
-                MessageBox.Show("请不要选择空白区域", "友情提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {                
+                RangeSelectHelper.blankrange();
                 return;
             }
             int icount = 0;
@@ -195,7 +199,7 @@ namespace kedouwenc
             }
             if (icount == 0)
             {
-                MessageBox.Show("选择的单元格没有数值区域", "友情提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                RangeSelectHelper.valuerange();
             }
             else
             {
@@ -213,6 +217,7 @@ namespace kedouwenc
             }
             Globals.ThisAddIn.Application.ScreenUpdating = true;
         }
+
         /// <summary>
         /// 公式转数值
         /// 20180329 如果公式区域不是连续的，比如合并单元格填充会存在问题
@@ -224,7 +229,6 @@ namespace kedouwenc
             Excel.Range rng;
 
             Globals.ThisAddIn.Application.ScreenUpdating = false;
-
             rng = Globals.ThisAddIn.Application.Intersect(Globals.ThisAddIn.Application.Selection, sht.UsedRange);
 
             //循环比较慢；
@@ -253,7 +257,7 @@ namespace kedouwenc
             try
             {
                 rng = rng.SpecialCells(XlCellType.xlCellTypeFormulas, 23);
-                MessageBox.Show(rng.Address);
+                //MessageBox.Show(rng.Address);
                 foreach (Excel.Range therng in rng)
                 {
                     therng.NumberFormatLocal = "G/通用格式";
@@ -263,7 +267,7 @@ namespace kedouwenc
             }
             catch
             {
-                MessageBox.Show(text: "选择的单元格没有公式。", caption: "提示", buttons: MessageBoxButtons.OK);
+                RangeSelectHelper.formularange();
             }
 
             Globals.ThisAddIn.Application.ScreenUpdating = true;
@@ -280,6 +284,7 @@ namespace kedouwenc
             frm.TopMost = true;
             frm.Show();
         }
+
 
         /// <summary>
         /// 区域分列转换
@@ -387,7 +392,7 @@ namespace kedouwenc
         /// <param name="control"></param>
         public void DelBlankRow(Office.IRibbonControl control)
         {
-            // 有一个大坑，就是单元格区域复制给数组，在本地窗口里面看 数组是0维开始，其实从1开始的。
+            //有一个大坑，就是单元格区域复制给数组，在本地窗口里面看 数组是0维开始，其实从1开始的。
             //On Error Resume Next VBConversions Warning: On Error Resume Next not supported in C#
             Globals.ThisAddIn.Application.ScreenUpdating = false; //关闭屏幕刷新
             Excel.Range rng;
@@ -398,8 +403,7 @@ namespace kedouwenc
             //将活动工作表的已用区域与第一行到最后一个非空行之间的区域的交集赋与变量rng	
             //If Globals.ThisAddIn.Application.WorksheetFunction.CountA(sht.UsedRange.Cells) = 0 Then Exit Sub
             rng = Globals.ThisAddIn.Application.Intersect(sht.UsedRange, Globals.ThisAddIn.Application.Rows["1:" + Globals.ThisAddIn.Application.Cells.Find(What: "*", After: Globals.ThisAddIn.Application.Cells[1, 1], LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlWhole, SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlPrevious).Row]);
-
-
+            
 
             if (Convert.IsDBNull(rng.MergeCells) || (!Convert.IsDBNull(rng.MergeCells) && rng.MergeCells))
             {
