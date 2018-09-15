@@ -1016,7 +1016,19 @@ namespace kedouwenc
             }
         }
 
-       
+
+        public void GeneralBasicDemo(Office.IRibbonControl control)
+        {
+            BaiduAI baidu_ai = new BaiduAI();
+            baidu_ai.GeneralBasicDemo();
+        }
+
+        public void AccurateBasicDemo(Office.IRibbonControl control)
+        {
+            BaiduAI baidu_ai = new BaiduAI();
+            baidu_ai.AccurateBasicDemo();
+        }
+
 
         public void Help(Office.IRibbonControl control)
         {
