@@ -59,7 +59,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(263, 21);
             this.textBox3.TabIndex = 5;
-            this.textBox3.Text = "选择或输入要创建的中文表名：";
+            this.textBox3.Text = "选择或输入要创建的中文表名(英文亦可)：";
             // 
             // button2
             // 

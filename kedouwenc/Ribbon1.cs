@@ -1025,13 +1025,18 @@ namespace kedouwenc
 
         public void AccurateBasicDemo(Office.IRibbonControl control)
         {
-            //BaiduAI baidu_ai = new BaiduAI();
-            //baidu_ai.AccurateBasicDemo();
+            BaiduAI baidu_ai = new BaiduAI();
+            baidu_ai.AccurateBasicDemo();
+        }
+        
+        public void TableRecognitionGetResultDemo(Office.IRibbonControl control)
+        {            
             BaiduAI baidu_ai = new BaiduAI();
             baidu_ai.TableRecognitionGetResultDemo();
-
-            
         }
+
+
+
 
 
         public void Help(Office.IRibbonControl control)

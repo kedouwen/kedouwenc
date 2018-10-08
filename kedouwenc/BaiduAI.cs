@@ -50,11 +50,10 @@ namespace kedouwenc
             // 带参数调用通用文字识别, 图片参数为本地图片
             result = client.GeneralBasic(image, options);
             Console.WriteLine(result);
-            RangeSelectHelper.jsontorange(result);
-
-
-
+            RangeSelectHelper.jsontorange(result);            
         }
+
+
 
 
         public void AccurateBasicDemo()
@@ -109,40 +108,49 @@ namespace kedouwenc
         }
 
 
-        public void TableRecognitionRequestDemo()
+
+        public string TableRecognitionRequestDemo()
         {
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
             var client = ai_InterActive.baidu_ai_InterActive();
             var image = File.ReadAllBytes(@"D:\666.jpg");
             // 调用表格文字识别，可能会抛出网络等异常，请使用try/catch捕获
             var result = client.TableRecognitionRequest(image);
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
+            return result["result"][0]["request_id"].ToString();
         }
 
 
         public void TableRecognitionGetResultDemo()
         {
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
-            var client = ai_InterActive.baidu_ai_InterActive();
-            //var image = File.ReadAllBytes(@"D:\666.jpg");
-           // var result_get = client.TableRecognitionRequest(image);
-            //MessageBox.Show(result_get["result"][0]["request_id"].ToString());
-           // var requestId = result_get["result"][0]["request_id"].ToString();
+            var client = ai_InterActive.baidu_ai_InterActive(); 
 
-            var requestId = "11430855_592019";
+            var requestId = TableRecognitionRequestDemo();
 
-            // 调用表格识别结果，可能会抛出网络等异常，请使用try/catch捕获
-            var result = client.TableRecognitionGetResult(requestId);
-            Console.WriteLine(result);
-            System.Diagnostics.Debug.WriteLine(result);
+            Newtonsoft.Json.Linq.JObject result;
 
+            /* do 循环执行 */
+            
+            do
+            {
+                // 调用表格识别结果，可能会抛出网络等异常，请使用try/catch捕获
+                result = client.TableRecognitionGetResult(requestId);
+                //System.Diagnostics.Debug.WriteLine(result["result"]["ret_code"].ToString());
+            } while ((int)result["result"]["ret_code"] != 3);
+                      
 
+            //Console.WriteLine(result);
+            System.Diagnostics.Debug.WriteLine(result);            
             MessageBox.Show(result.ToString());
+
+
+           
             // 如果有可选参数
-            var options = new Dictionary<string, object>{{"result_type", "excel"}    };
+            //var options = new Dictionary<string, object>{{"result_type", "excel"}    };
             // 带参数调用表格识别结果
-            result = client.TableRecognitionGetResult(requestId, options);
-            Console.WriteLine(result);
+            //result = client.TableRecognitionGetResult(requestId, options);
+           
         }
 
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Text.RegularExpressions;
 
 namespace kedouwenc
 {
@@ -17,18 +18,41 @@ namespace kedouwenc
             InitializeComponent();
         }
 
+        //判断输入的字符是否符合格式
+        private bool CheckInputText(string inputStr)
+        {
+            //字符串不能为空
+            if (string.IsNullOrEmpty(inputStr))
+                return false;
+            //判断字符串是否完全是中文
+            //匹配中文字符的正则表达式
+            //还要匹配换行符
+            //string patternCN = @"^[\u4e00-\u9fa5\r\n]+$";
+            string patternCN = @"^[A-Za-z0-9]+$";
+
+            //匹配表达式，如果匹配成功，说明格式符合要求
+            if (Regex.IsMatch(inputStr, patternCN))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
 
             textBox1.Text = "";
             Excel.Range rng;
             object[,] arr;
-
-
             string tablename_chs = textBox3.Text;
-            TextToPinyinForm tempform = new TextToPinyinForm();
+            string tablename = tablename_chs;
+            if (!CheckInputText(tablename_chs))
+            {
+                TextToPinyinForm tempform = new TextToPinyinForm();
+                tablename = tempform.ConvertCnToPinyinABC(tablename_chs);
+            }
 
-            string tablename = tempform.ConvertCnToPinyinABC(tablename_chs);
 
             string tempcreatetable = "";
             string commentcolumn = "";
@@ -43,22 +67,12 @@ namespace kedouwenc
                 tempcreatetable = tempcreatetable + arr[i, 1] + "  " + arr[i, 2] + ",\r\n";
                 commentcolumn = commentcolumn + "comment on column " + tablename + "." + arr[i, 1] + " is '" + arr[i, 3] + "';\r\n";
             }
-
-            string tempcreateuuid = "DATA_UP_UUID  VARCHAR2(100)  default sys_guid() NOT NULL,";
-            string tempcreatedateup = ",DATA_UP_TIME  date,DATA_UP_STATUS  varchar2(100));";
-
-            ceratetable = "CREATE TABLE " + tablename + "(" + tempcreateuuid + "\r\n" + tempcreatetable.Substring(0, tempcreatetable.Length - 3) + tempcreatedateup;
-
-
-            commentcolumn = commentcolumn + "comment on column " + tablename + ".DATA_UP_UUID is '主键';" +
-                "\r\n" + "comment on column " + tablename + ".DATA_UP_TIME is '数据入库时间';" +
-                "\r\n" + "comment on column " + tablename + ".DATA_UP_STATUS is '数据状态(I新增数据、U更新数据、D删除数据)';";
-
-
+            
+            ceratetable = "CREATE TABLE " + tablename + "("+ tempcreatetable.Substring(0, tempcreatetable.Length - 3)+ ");";
             string tempcommenttable = "comment on table " + tablename + " is '" + tablename_chs + "';";
-            string tempcreatepk = "alter table " + tablename + " add constraint PK_" + tablename + "_UUID primary key (DATA_UP_UUID);";
+            //string tempcreatepk = "alter table " + tablename + " add constraint PK_" + tablename + "_UUID primary key (DATA_UP_UUID);";
 
-            textBox1.Text = ceratetable + "\r\n" + commentcolumn + "\r\n" + tempcommenttable + "\r\n" + tempcreatepk;
+            textBox1.Text = ceratetable + "\r\n" + commentcolumn + "\r\n" + tempcommenttable;
 
             if (textBox1.Text != "")
                 Clipboard.SetDataObject(textBox1.Text); 
@@ -109,6 +123,6 @@ namespace kedouwenc
           
         }
 
-
+       
     }
 }
