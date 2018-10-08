@@ -92,7 +92,6 @@ namespace kedouwenc
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
             var client = ai_InterActive.baidu_ai_InterActive();
 
-
             var image = File.ReadAllBytes(@"D:\666.jpg");
             var idCardSide = "front";
 
@@ -110,6 +109,41 @@ namespace kedouwenc
         }
 
 
+        public void TableRecognitionRequestDemo()
+        {
+            BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
+            var client = ai_InterActive.baidu_ai_InterActive();
+            var image = File.ReadAllBytes(@"D:\666.jpg");
+            // 调用表格文字识别，可能会抛出网络等异常，请使用try/catch捕获
+            var result = client.TableRecognitionRequest(image);
+            Console.WriteLine(result);
+        }
+
+
+        public void TableRecognitionGetResultDemo()
+        {
+            BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
+            var client = ai_InterActive.baidu_ai_InterActive();
+            //var image = File.ReadAllBytes(@"D:\666.jpg");
+           // var result_get = client.TableRecognitionRequest(image);
+            //MessageBox.Show(result_get["result"][0]["request_id"].ToString());
+           // var requestId = result_get["result"][0]["request_id"].ToString();
+
+            var requestId = "11430855_592019";
+
+            // 调用表格识别结果，可能会抛出网络等异常，请使用try/catch捕获
+            var result = client.TableRecognitionGetResult(requestId);
+            Console.WriteLine(result);
+            System.Diagnostics.Debug.WriteLine(result);
+
+
+            MessageBox.Show(result.ToString());
+            // 如果有可选参数
+            var options = new Dictionary<string, object>{{"result_type", "excel"}    };
+            // 带参数调用表格识别结果
+            result = client.TableRecognitionGetResult(requestId, options);
+            Console.WriteLine(result);
+        }
 
 
 
