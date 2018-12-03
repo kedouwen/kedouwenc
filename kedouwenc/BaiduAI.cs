@@ -16,6 +16,22 @@ namespace kedouwenc
     class BaiduAI
     {
 
+
+
+
+        public byte[] selectimage() {
+            byte[] image = null;
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "*jpg|*.JPG|*.GIF|*.GIF|*.BMP|*.BMP";
+            DialogResult fdresult = fileDialog.ShowDialog();
+            if (fdresult == DialogResult.OK)
+            {
+                image = File.ReadAllBytes(fileDialog.FileName);
+            }
+            return image;
+
+        }
+
         public void GeneralBasicDemo()
         {
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
@@ -30,13 +46,13 @@ namespace kedouwenc
             if (fdresult == DialogResult.OK)
             {
                 image = File.ReadAllBytes(fileDialog.FileName);
-            }
-            
-            Excel.Worksheet actsheet = Globals.ThisAddIn.Application.ActiveSheet;            
+            }           
+
+                        
+            Excel.Worksheet actsheet = Globals.ThisAddIn.Application.ActiveSheet;
             actsheet.Shapes.AddPicture(fileDialog.FileName,Microsoft.Office.Core.MsoTriState.msoFalse,
                 Microsoft.Office.Core.MsoTriState.msoCTrue,100,100,100,100);
-
-
+            
             // 调用通用文字识别, 图片参数为本地图片，可能会抛出网络等异常，请使用try/catch捕获
             var result = client.GeneralBasic(image);
             Console.WriteLine(result);
@@ -68,8 +84,7 @@ namespace kedouwenc
             if (fdresult == DialogResult.OK)
             {
                 image = File.ReadAllBytes(fileDialog.FileName);
-            }
-
+            }           
             Excel.Worksheet actsheet = Globals.ThisAddIn.Application.ActiveSheet;
             actsheet.Shapes.AddPicture(fileDialog.FileName, Microsoft.Office.Core.MsoTriState.msoFalse,
             Microsoft.Office.Core.MsoTriState.msoCTrue, 100, 100, 100, 100);
@@ -113,7 +128,22 @@ namespace kedouwenc
         {
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
             var client = ai_InterActive.baidu_ai_InterActive();
-            var image = File.ReadAllBytes(@"D:\666.jpg");
+            //var image = File.ReadAllBytes(@"D:\666.jpg");
+
+            byte[] image = null;
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "*jpg|*.JPG|*.GIF|*.GIF|*.BMP|*.BMP";
+            DialogResult fdresult = fileDialog.ShowDialog();
+            if (fdresult == DialogResult.OK)
+            {
+                image = File.ReadAllBytes(fileDialog.FileName);
+            }
+
+            //Excel.Worksheet actsheet = Globals.ThisAddIn.Application.ActiveSheet;
+            //actsheet.Shapes.AddPicture(fileDialog.FileName, Microsoft.Office.Core.MsoTriState.msoFalse,
+            //Microsoft.Office.Core.MsoTriState.msoCTrue, 100, 100, 100, 100);
+
+
             // 调用表格文字识别，可能会抛出网络等异常，请使用try/catch捕获
             var result = client.TableRecognitionRequest(image);
             //Console.WriteLine(result);
@@ -124,33 +154,67 @@ namespace kedouwenc
         public void TableRecognitionGetResultDemo()
         {
             BaiduAI_InterActive ai_InterActive = new BaiduAI_InterActive();
-            var client = ai_InterActive.baidu_ai_InterActive(); 
+            var client = ai_InterActive.baidu_ai_InterActive();
 
             var requestId = TableRecognitionRequestDemo();
+            //var requestId = "11430855_597217";
+            
+
+            //byte[] image = null;
+            //OpenFileDialog fileDialog = new OpenFileDialog();
+            //fileDialog.Filter = "*jpg|*.JPG|*.GIF|*.GIF|*.BMP|*.BMP";
+            //DialogResult fdresult = fileDialog.ShowDialog();
+            //if (fdresult == DialogResult.OK)
+            //{
+            //    image = File.ReadAllBytes(fileDialog.FileName);
+            //}
+            //var result_GET = client.TableRecognitionRequest(image);
+
+            //var requestId = result_GET["result"][0]["request_id"].ToString();
 
             Newtonsoft.Json.Linq.JObject result;
-
-            /* do 循环执行 */
             
+            int condition = 0;
+            /* do 循环执行 */
             do
             {
                 // 调用表格识别结果，可能会抛出网络等异常，请使用try/catch捕获
                 result = client.TableRecognitionGetResult(requestId);
                 //System.Diagnostics.Debug.WriteLine(result["result"]["ret_code"].ToString());
-            } while ((int)result["result"]["ret_code"] != 3);
+                try
+                {
+                    condition = (int)result["result"]["ret_code"];
+                }
+                catch
+                {
+                    condition = 99999;
+                }
+                System.Diagnostics.Debug.WriteLine(condition);
+
+
+            } while (condition != 3);
                       
-
             //Console.WriteLine(result);
-            System.Diagnostics.Debug.WriteLine(result);            
-            MessageBox.Show(result.ToString());
-
-
+            System.Diagnostics.Debug.WriteLine(result);           
            
             // 如果有可选参数
             //var options = new Dictionary<string, object>{{"result_type", "excel"}    };
             // 带参数调用表格识别结果
             //result = client.TableRecognitionGetResult(requestId, options);
-           
+
+            MessageBox.Show(result.ToString());
+
+            Excel.Range rng = (Excel.Range)Globals.ThisAddIn.Application.InputBox(Prompt: "请选择存放区域，选择单个单元格即可", Type: 8);
+
+            string result_file_url = (string)result["result"]["result_data"];
+
+            rng.Offset[0, 0].Resize[1, 1].Value = result_file_url;
+
+
+
+
+
+
         }
 
 

@@ -11,8 +11,7 @@ namespace kedouwenc
 
     // you generate using Create GUID from the Tools menu
 
-
-    [Guid("725CD5D5-A7C5-4118-8DE8-562B88334888")]
+    [Guid("311B7A43-A33C-463D-A332-17F60DD1B950")]   
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ComVisible(true)]
     public class MyFunctions
