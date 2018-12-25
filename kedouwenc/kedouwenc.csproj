@@ -394,7 +394,7 @@
     <ManifestKeyFile>kedouwenc_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>707618A5EE0CED4E63B4C9589F60D0E10D93901A</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>233977BE3BD31A31E3DBB185D7D4D1730DBCC721</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
