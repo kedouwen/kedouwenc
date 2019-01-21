@@ -284,15 +284,8 @@
     <Compile Include="PinyinService\TextToPinyinForm.Designer.cs">
       <DependentUpon>TextToPinyinForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Udf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="UpperLowerT.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UpperLowerT.Designer.cs">
-      <DependentUpon>UpperLowerT.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="CreateJson.resx">
       <DependentUpon>CreateJson.cs</DependentUpon>
@@ -331,10 +324,6 @@
     <EmbeddedResource Include="PinyinService\TextToPinyinForm.resx">
       <DependentUpon>TextToPinyinForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UpperLowerT.resx">
-      <DependentUpon>UpperLowerT.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="kedouwenc_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -391,10 +380,11 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>kedouwenc_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>233977BE3BD31A31E3DBB185D7D4D1730DBCC721</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>BE7EB0C31386E2501F8F7AD8E96C562621445C54</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

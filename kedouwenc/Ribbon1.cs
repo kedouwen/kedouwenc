@@ -274,18 +274,7 @@ namespace kedouwenc
 
         }
 
-        /// <summary>
-        /// 大小写转换
-        /// </summary>
-        /// <param name="control"></param>
-        public void UpperLowerT(Office.IRibbonControl control)
-        {
-            Form frm = new UpperLowerT();
-            frm.TopMost = true;
-            frm.Show();
-        }
-
-
+        
         /// <summary>
         /// 区域分列转换
         /// </summary>
