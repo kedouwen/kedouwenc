@@ -100,6 +100,7 @@ namespace kedouwenc
                 if (!string.IsNullOrEmpty(str))
                 {
                     rng.Value2 = str.Trim().Replace(" ", "");
+                    rng.Value2 = rng.Value2.Trim();
                 }
             }
 
