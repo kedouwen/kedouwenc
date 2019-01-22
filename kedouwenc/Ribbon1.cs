@@ -43,6 +43,7 @@ namespace kedouwenc
         private Office.IRibbonUI ribbon;
         public static string gifid = "";
         public static Boolean ispressed;
+        public static Boolean isnewpressed;
         public string StrLabel;
         internal Microsoft.Office.Tools.CustomTaskPane OracleCreateTableSqlTaskPane;
         internal Microsoft.Office.Tools.CustomTaskPane CreateJsonTaskPane;
@@ -68,6 +69,138 @@ namespace kedouwenc
             ispressed = pressed;
             //MessageBox.Show(Convert.ToString(Ribbon1.ispressed) + "666");
         }
+
+
+        public int PPI, iZoom;
+        public struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+        public RECT oXl7Rect, oFstPnRect, oRect;
+        public static IntPtr lHwndExcel7;
+        [DllImport("user32.dll")] public static extern IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+        public void HighLight(Office.IRibbonControl control, Boolean pressed = true)
+        {
+            isnewpressed = pressed;
+
+            HighLight ihighlight = new HighLight();
+
+            //int lStyle = ihighlight.CreateParams.Style; 
+
+            //ihighlight.CreateParams.ExStyle = lStyle & ~0x00800000 &~0x00C00000; 
+
+            GetPPI();
+            //MessageBox.Show(PPI.ToString());
+
+            ihighlight.Show();
+
+
+
+
+
+        }
+        public void GetPPI()
+        {
+            IntPtr hDc = IntPtr.Zero;
+            var ihwnd=System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            //hDc=ihwnd.GetHdc();
+            //ihwnd.ReleaseHdc();
+           PPI=Convert.ToInt32(ihwnd.DpiY); 
+        }
+
+        public double pt2px(double x)
+        {
+            return Math.Round(Math.Round(x * PPI / 72, 0) * iZoom / 100, 0); //切记：这里一定不要使用VB的Round函数。
+        }
+
+        public void getExcel7Rect()
+        {
+            IntPtr lHwndXlDesk, lhwndHscrBar, lhwndVscrBar;
+            RECT oHScrBarRect = new RECT();
+            RECT oVScrBarRect = new RECT();
+            
+            dynamic wn = Globals.ThisAddIn.Application.ActiveWindow;
+            iZoom = (int)wn.Zoom; //获取窗口显示比例
+            IntPtr myhwnd = new IntPtr(Globals.ThisAddIn.Application.Hwnd);
+            lHwndXlDesk = FindWindowEx(myhwnd, IntPtr.Zero, "XLDESK", null);            
+            lHwndExcel7 = FindWindowEx(lHwndXlDesk, IntPtr.Zero, "EXCEL7", null);           
+            lhwndHscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "水平"); //水平滚动条的句柄
+            lhwndVscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "垂直"); //垂直滚动条的句柄
+
+            if (wn.Split)
+            {
+                if (Convert.ToBoolean(wn.SplitRow))
+                {
+                    lhwndVscrBar = FindWindowEx((IntPtr)lHwndExcel7, (IntPtr)lhwndVscrBar, "NUIScrollbar", "垂直"); //垂直滚动条的句柄
+                }
+
+                if (Convert.ToBoolean(wn.SplitColumn))
+                {
+                    lhwndHscrBar = FindWindowEx((IntPtr)lHwndExcel7, (IntPtr)lhwndHscrBar, "NUIScrollbar", "水平"); //垂直滚动条的句柄
+                }
+            }
+
+
+            oHScrBarRect = wn.Bounds;
+
+
+            //GetWindowRect((IntPtr)lhwndHscrBar, out oHScrBarRect);
+            //GetWindowRect((IntPtr)lhwndVscrBar, out oVScrBarRect);
+
+            if (wn.DisplayHorizontalScrollBar || wn.DisplayWorkbookTabs)
+            {
+                oXl7Rect.Bottom = oVScrBarRect.Bottom;
+            }
+
+            if (wn.DisplayVerticalScrollBar)
+            {
+                oXl7Rect.Right = oHScrBarRect.Right - 2;
+            }
+
+            dynamic pn = wn.Panes[1]; //pane
+            dynamic oRngVsbl = pn.VisibleRange.Cells[1];
+
+
+            oXl7Rect.Left = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px(oRngVsbl.Left), MidpointRounding.AwayFromZero));
+            oXl7Rect.Top = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRngVsbl.Top), MidpointRounding.AwayFromZero));
+            oFstPnRect.Left = oXl7Rect.Left;
+            oFstPnRect.Top = oXl7Rect.Top;
+
+            oRngVsbl = pn.VisibleRange;
+
+            if (Convert.ToBoolean(wn.SplitRow))
+            {
+                oFstPnRect.Bottom = oVScrBarRect.Top;
+                if (wn.FreezePanes)
+                {
+                    oRngVsbl = oRngVsbl.Cells(1).Offset(wn.SplitRow - 1);
+                    oFstPnRect.Bottom = wn.PointsToScreenPixelsY(0) + (int)pt2px(oRngVsbl.Top + oRngVsbl.Height);
+                }
+            }
+            else
+            {
+                oFstPnRect.Bottom = oVScrBarRect.Bottom;
+            }
+
+            if (Convert.ToBoolean(wn.SplitColumn))
+            {
+                oFstPnRect.Right = oHScrBarRect.Left;
+                if (wn.FreezePanes)
+                {
+                    oRngVsbl = oRngVsbl.Cells[1].Offset[0, wn.SplitColumn - 1];
+                    oFstPnRect.Right = wn.PointsToScreenPixelsX(0) + (int)pt2px(oRngVsbl.Left + oRngVsbl.Width);
+                }
+            }
+            else
+            {
+                oFstPnRect.Right = oHScrBarRect.Right;
+            }
+        }
+
+
 
 
 

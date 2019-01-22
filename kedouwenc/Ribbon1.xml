@@ -6,6 +6,7 @@
 			<tab id="tab1" label="蝌蚪文工具箱(C#)"  visible="true" insertAfterMso="TabHome">
 				<group id="Group1"  visible="true"  label="视图">
 					<toggleButton id="ReadMode" label="阅读模式" imageMso="ViewDisplayInHighContrast" size="large"  onAction="ReadMode" screentip="什么是阅读模式" supertip="单击进入阅读模式，从而使选择单元格时突出当前行和当前列。再次单击时可退出阅读模式" keytip="D"/>
+          <toggleButton id="HighLight" label="行列高亮" imageMso="ViewDisplayInHighContrast" size="large"  onAction="HighLight"/>
 					<separator id="separator1"/>
 					<button id="ForDisplay" label="显示设置"   imageMso="TableSharePointListsModifyColumnsAndSettings" onAction="ForDisplay" />
 					<button id="FromHere" label="从当前开始" imageMso="SmartArtAddShapeAbove" onAction="FromHere" />
