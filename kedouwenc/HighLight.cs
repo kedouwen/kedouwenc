@@ -15,7 +15,7 @@ namespace kedouwenc
         {
             InitializeComponent();
             base.Opacity = 0.75;// Set the opacity to 75%.
-            
+            Ribbon1.lHwndForm = this.Handle;
         }
 
 
@@ -33,7 +33,7 @@ namespace kedouwenc
                 CreateParams CP;
                 CP = base.CreateParams;
                 CP.Style &= ~WS_CAPTION & ~WS_BORDER | WS_CHILD;
-                CP.ExStyle = CP.ExStyle | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW;//   '添加扩展风格：1（图形）层叠的2(对鼠标）透明的 3工具窗口式的（插件一般要设为工具窗口以使其图标不在任务栏中显示）
+                CP.ExStyle |= WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW;//   '添加扩展风格：1（图形）层叠的2(对鼠标）透明的 3工具窗口式的（插件一般要设为工具窗口以使其图标不在任务栏中显示）
                 return CP;
             }
         }

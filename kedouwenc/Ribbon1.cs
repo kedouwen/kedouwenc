@@ -10,6 +10,7 @@ using Microsoft.Office.Interop.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Forms; //命名空间引入；
 using Microsoft.VisualBasic;//可以引用VB.NET中的IsNumberic等函数
+using System.Drawing;
 
 
 //return跳出方法
@@ -50,7 +51,7 @@ namespace kedouwenc
         internal Microsoft.Office.Tools.CustomTaskPane oraclecommentTaskPane;
         internal Microsoft.Office.Tools.CustomTaskPane jsontoarrayTaskPane;
 
-        
+
 
 
 
@@ -72,6 +73,7 @@ namespace kedouwenc
 
 
         public int PPI, iZoom;
+
         public struct RECT
         {
             public int Left;
@@ -82,38 +84,70 @@ namespace kedouwenc
         public RECT oXl7Rect, oFstPnRect, oRect;
         public static IntPtr lHwndExcel7;
         [DllImport("user32.dll")] public static extern IntPtr FindWindowEx(IntPtr hWndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+        [DllImport("user32.dll")] static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+
+        public const int RGN_AND = 1;
+        public const int RGN_OR = 2;
+        public const int RGN_XOR = 3;
+
+        [DllImport("gdi32.dll")] static extern IntPtr CreateRectRgn(int X1, int Y1, int X2, int Y2);
+        [DllImport("user32.dll")] static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        public const int GWL_HWNDPARENT = -8;
+        [DllImport("user32.dll")] public static extern bool DestroyWindow(IntPtr hwnd);    
+        public static IntPtr lHwndForm;
+        public System.Drawing.Region lRgn;
+        [DllImport("user32.dll")] static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+      
+
         public void HighLight(Office.IRibbonControl control, Boolean pressed = true)
         {
             isnewpressed = pressed;
+            if (isnewpressed)
+            {
+                HighLight ihighlight = new HighLight();
+               
+                LightShine();
 
-            HighLight ihighlight = new HighLight();
+                ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
+                System.Drawing.Rectangle LightRect = ihighlight.Bounds;
 
-            //int lStyle = ihighlight.CreateParams.Style; 
+                lRgn.Translate(-LightRect.Left, -LightRect.Top);
+                ihighlight.Region = lRgn;
+               
+                
 
-            //ihighlight.CreateParams.ExStyle = lStyle & ~0x00800000 &~0x00C00000; 
+                Excel.Application xlapp = Globals.ThisAddIn.Application;
+                IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
+                SetWindowLong(ihighlight.Handle, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
+                ShowWindow(lHwndForm, 4);
+                //ihighlight.Show();
+            }
+            else
+            {
+                DestroyWindow(lHwndForm);
+            }
+        }
 
-            GetPPI();
-            //MessageBox.Show(PPI.ToString());
+        public void LightShine()
+        {
 
-            ihighlight.Show();
-
-
-
-
-
+            if (PPI == 0)
+            {
+                GetPPI();
+            };
+            getExcel7Rect();
+            GetLightRgn();
         }
         public void GetPPI()
         {
             IntPtr hDc = IntPtr.Zero;
-            var ihwnd=System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
-            //hDc=ihwnd.GetHdc();
-            //ihwnd.ReleaseHdc();
-           PPI=Convert.ToInt32(ihwnd.DpiY); 
+            var ihwnd = System.Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            PPI = Convert.ToInt32(ihwnd.DpiY);
         }
 
         public double pt2px(double x)
         {
-            return Math.Round(Math.Round(x * PPI / 72, 0) * iZoom / 100, 0); //切记：这里一定不要使用VB的Round函数。
+            return Math.Round(Math.Round(x * PPI / 72, 0) * iZoom / 100, 0); 
         }
 
         public void getExcel7Rect()
@@ -121,12 +155,12 @@ namespace kedouwenc
             IntPtr lHwndXlDesk, lhwndHscrBar, lhwndVscrBar;
             RECT oHScrBarRect = new RECT();
             RECT oVScrBarRect = new RECT();
-            
+
             dynamic wn = Globals.ThisAddIn.Application.ActiveWindow;
             iZoom = (int)wn.Zoom; //获取窗口显示比例
             IntPtr myhwnd = new IntPtr(Globals.ThisAddIn.Application.Hwnd);
-            lHwndXlDesk = FindWindowEx(myhwnd, IntPtr.Zero, "XLDESK", null);            
-            lHwndExcel7 = FindWindowEx(lHwndXlDesk, IntPtr.Zero, "EXCEL7", null);           
+            lHwndXlDesk = FindWindowEx(myhwnd, IntPtr.Zero, "XLDESK", null);
+            lHwndExcel7 = FindWindowEx(lHwndXlDesk, IntPtr.Zero, "EXCEL7", null);
             lhwndHscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "水平"); //水平滚动条的句柄
             lhwndVscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "垂直"); //垂直滚动条的句柄
 
@@ -143,12 +177,8 @@ namespace kedouwenc
                 }
             }
 
-
-            oHScrBarRect = wn.Bounds;
-
-
-            //GetWindowRect((IntPtr)lhwndHscrBar, out oHScrBarRect);
-            //GetWindowRect((IntPtr)lhwndVscrBar, out oVScrBarRect);
+            GetWindowRect((IntPtr)lhwndHscrBar, out oHScrBarRect);
+            GetWindowRect((IntPtr)lhwndVscrBar, out oVScrBarRect);
 
             if (wn.DisplayHorizontalScrollBar || wn.DisplayWorkbookTabs)
             {
@@ -199,7 +229,96 @@ namespace kedouwenc
                 oFstPnRect.Right = oHScrBarRect.Right;
             }
         }
+        public void GetLightRgn()
+        {
+            RECT oPnRect = new RECT();
+            Excel.Application xlapp = Globals.ThisAddIn.Application;
+            Excel.Window Wn = xlapp.ActiveWindow;
+            Excel.Pane pn = Wn.Panes[1];
+            Excel.Range oRngVsbl = pn.VisibleRange.Cells[1];
+            
+            lRgn = new System.Drawing.Region(new System.Drawing.Rectangle(0, 0, 0, 0));
+            Excel.Range oRange = xlapp.ActiveWindow.RangeSelection.Areas[1];
 
+            for (int j = 1; j <= Wn.Panes.Count; j++)
+            {
+                pn = Wn.Panes[j];
+                switch (j)
+                {
+                    case 1:
+                        oPnRect.Left = oFstPnRect.Left;
+                        oPnRect.Top = oFstPnRect.Top;
+                        break;
+                    case 2:
+                        if (Convert.ToBoolean(Wn.SplitColumn))
+                        {
+                            oPnRect.Left = oFstPnRect.Right;
+                            oPnRect.Top = oFstPnRect.Top;
+                        }
+                        else
+                        {
+                            oPnRect.Left = oFstPnRect.Left;
+                            oPnRect.Top = oFstPnRect.Bottom;
+                        }
+                        break;
+                    case 3:
+                        oPnRect.Left = oFstPnRect.Left;
+                        oPnRect.Top = oFstPnRect.Bottom;
+                        break;
+                    default:
+                        oPnRect.Left = oFstPnRect.Right;
+                        oPnRect.Top = oFstPnRect.Bottom;
+                        break;
+                }
+
+                oRngVsbl = pn.VisibleRange;
+                Excel.Range oRng = xlapp.Intersect(oRngVsbl, oRange);
+                if (oRng is null) continue;
+                double ht = 0;
+                for (int x = 1; x <= oRng.Rows.Count; x++)
+                {
+                    ht += pt2px(oRng.Rows[x].Height);
+                }
+                //MessageBox.Show(oRng.address);
+                oRect.Left = oXl7Rect.Left;
+                oRect.Right = oXl7Rect.Right;
+                oRect.Top = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[1].Top), MidpointRounding.AwayFromZero));
+                oRect.Bottom = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[oRng.Rows.Count].Top) + pt2px(oRng.Rows[oRng.Rows.Count].Height), MidpointRounding.AwayFromZero));
+
+                if (oRect.Top < oXl7Rect.Top)
+                {
+                    oRect.Top = oXl7Rect.Top;
+                }
+                if (oRect.Bottom > oXl7Rect.Bottom)
+                {
+                    oRect.Bottom = oXl7Rect.Bottom;
+                }
+                //lHRgn = CreateRectRgnIndirect(oRect);
+
+                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oRect.Right-oRect.Left, oRect.Bottom-oRect.Top);
+                System.Drawing.Region lHRgn = new System.Drawing.Region(rectangle1);
+
+                oRect.Top = oXl7Rect.Top;
+                oRect.Bottom = oXl7Rect.Bottom;
+                oRect.Left = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px(oRng.Cells[1].Left), MidpointRounding.AwayFromZero));
+                oRect.Right = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px((double)oRng.Columns[oRng.Columns.Count].Left) + pt2px((double)oRng.Columns[oRng.Columns.Count].Width), MidpointRounding.AwayFromZero));
+                if (oRect.Left < oXl7Rect.Left)
+                {
+                    oRect.Left = oXl7Rect.Left;
+                }
+                if (oRect.Right > oXl7Rect.Right)
+                {
+                    oRect.Right = oXl7Rect.Right;
+                }
+                System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oRect.Right - oRect.Left, oRect.Bottom - oRect.Top);
+                System.Drawing.Region lVRgn = new System.Drawing.Region(rectangle2);
+
+                lRgn.Union(lHRgn);
+                lRgn.Union(lVRgn);
+                
+                
+            }
+        }
 
 
 
@@ -255,7 +374,7 @@ namespace kedouwenc
 
             //如果没有交集，那么结束过程
             if (rngs == null)
-            {                
+            {
                 RangeSelectHelper.blankrange();
                 return;
             }
@@ -313,11 +432,11 @@ namespace kedouwenc
 
             Globals.ThisAddIn.Application.ScreenUpdating = false;
             rng = Globals.ThisAddIn.Application.Intersect(Globals.ThisAddIn.Application.Selection, sht.UsedRange);
-            arr = rng.Value;            
+            arr = rng.Value;
 
             //如果没有交集，那么结束过程
             if (rng == null)
-            {                
+            {
                 RangeSelectHelper.blankrange();
                 return;
             }
@@ -407,7 +526,7 @@ namespace kedouwenc
 
         }
 
-        
+
         /// <summary>
         /// 区域分列转换
         /// </summary>
@@ -525,7 +644,7 @@ namespace kedouwenc
             //将活动工作表的已用区域与第一行到最后一个非空行之间的区域的交集赋与变量rng	
             //If Globals.ThisAddIn.Application.WorksheetFunction.CountA(sht.UsedRange.Cells) = 0 Then Exit Sub
             rng = Globals.ThisAddIn.Application.Intersect(sht.UsedRange, Globals.ThisAddIn.Application.Rows["1:" + Globals.ThisAddIn.Application.Cells.Find(What: "*", After: Globals.ThisAddIn.Application.Cells[1, 1], LookIn: XlFindLookIn.xlValues, LookAt: XlLookAt.xlWhole, SearchOrder: XlSearchOrder.xlByRows, SearchDirection: XlSearchDirection.xlPrevious).Row]);
-            
+
 
             if (Convert.IsDBNull(rng.MergeCells) || (!Convert.IsDBNull(rng.MergeCells) && rng.MergeCells))
             {
@@ -1150,9 +1269,9 @@ namespace kedouwenc
             BaiduAI baidu_ai = new BaiduAI();
             baidu_ai.AccurateBasicDemo();
         }
-        
+
         public void TableRecognitionGetResultDemo(Office.IRibbonControl control)
-        {            
+        {
             BaiduAI baidu_ai = new BaiduAI();
             baidu_ai.TableRecognitionGetResultDemo();
         }
