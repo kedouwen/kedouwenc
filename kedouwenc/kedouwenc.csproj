@@ -370,6 +370,8 @@
     <Content Include="PinyinService\Dictionary\Dictionary.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="project_dll\ChineseConverter.dll" />
+    <Content Include="project_dll\ChnCharInfo.dll" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
@@ -384,7 +386,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>BE7EB0C31386E2501F8F7AD8E96C562621445C54</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>233977BE3BD31A31E3DBB185D7D4D1730DBCC721</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
