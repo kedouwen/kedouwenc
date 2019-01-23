@@ -26,46 +26,58 @@ namespace kedouwenc
             Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
             cellmeau cell_meau = new cellmeau();
             cell_meau.cellmenu();
-        }
 
+        }
 
         void Application_SheetSelectionChange(object Sh, Excel.Range Target)
         {
             // MessageBox.Show(Convert.ToString(Ribbon1.ispressed));
-            if (Ribbon1.ispressed)
+            if (Ribbon1.isnewpressed)
             {
-                Globals.ThisAddIn.Application.EnableEvents = false; //禁止响应事件
-                //if (Target.Rows.Count < 3 && Target.Columns.Count < 3)
-                //{
-                //    Globals.ThisAddIn.Application.Union(Target.EntireColumn, Target.EntireRow).Select();
-                //    Target.Activate();
-                //}
-                Excel.Worksheet sht = Target.Parent;                
-                int colIndex = Target.Column;
-                int rowIndex = Target.Row;
-                DeletePreviouSpotLightCondition();
-
-                Excel.Range spotLightRange = Globals.ThisAddIn.Application.Union(sht.Range[sht.Cells[1, colIndex], Target.Offset[-1, 0].Resize[1, Target.Columns.Count]],
-                                                                   sht.Range[Target.Offset[Target.Rows.Count, 0], sht.Cells[sht.Rows.Count, colIndex]],
-                                                                   sht.Range[sht.Cells[rowIndex, 1], Target.Offset[0, -1].Resize[Target.Rows.Count, 1]],
-                                                                   sht.Range[Target.Offset[0, Target.Columns.Count], sht.Cells[rowIndex, sht.Columns.Count]]
-                                                                    );
-
-                Excel.FormatCondition currentFormatCondition = spotLightRange.FormatConditions.Add(Type: Excel.XlFormatConditionType.xlExpression, Formula1: "=TRUE");
-                currentFormatCondition.SetFirstPriority();
-                currentFormatCondition.StopIfTrue = true;
-
-
-                Color spotColor = Color.LightGoldenrodYellow;
-
-
-                currentFormatCondition.Interior.Color = spotColor;
-                //currentFormatCondition.Interior.Color = ColorTranslator.ToOle(spotColor);
-
-                previousSpotLightRange = spotLightRange;
-                Globals.ThisAddIn.Application.EnableEvents = true; //恢复响应事件          
+                Ribbon1 xlribbon = new Ribbon1();
+                xlribbon.LightShine();
             }
         }
+
+        //void Application_SheetSelectionChange(object Sh, Excel.Range Target)
+        //{
+        //    // MessageBox.Show(Convert.ToString(Ribbon1.ispressed));
+        //    if (Ribbon1.ispressed)
+        //    {
+        //        Globals.ThisAddIn.Application.EnableEvents = false; //禁止响应事件
+        //        //if (Target.Rows.Count < 3 && Target.Columns.Count < 3)
+        //        //{
+        //        //    Globals.ThisAddIn.Application.Union(Target.EntireColumn, Target.EntireRow).Select();
+        //        //    Target.Activate();
+        //        //}
+
+
+        //        Excel.Worksheet sht = Target.Parent;                
+        //        int colIndex = Target.Column;
+        //        int rowIndex = Target.Row;
+        //        DeletePreviouSpotLightCondition();
+
+        //        Excel.Range spotLightRange = Globals.ThisAddIn.Application.Union(sht.Range[sht.Cells[1, colIndex], Target.Offset[-1, 0].Resize[1, Target.Columns.Count]],
+        //                                                           sht.Range[Target.Offset[Target.Rows.Count, 0], sht.Cells[sht.Rows.Count, colIndex]],
+        //                                                           sht.Range[sht.Cells[rowIndex, 1], Target.Offset[0, -1].Resize[Target.Rows.Count, 1]],
+        //                                                           sht.Range[Target.Offset[0, Target.Columns.Count], sht.Cells[rowIndex, sht.Columns.Count]]
+        //                                                            );
+
+        //        Excel.FormatCondition currentFormatCondition = spotLightRange.FormatConditions.Add(Type: Excel.XlFormatConditionType.xlExpression, Formula1: "=TRUE");
+        //        currentFormatCondition.SetFirstPriority();
+        //        currentFormatCondition.StopIfTrue = true;
+
+
+        //        Color spotColor = Color.LightGoldenrodYellow;
+
+
+        //        currentFormatCondition.Interior.Color = spotColor;
+        //        //currentFormatCondition.Interior.Color = ColorTranslator.ToOle(spotColor);
+
+        //        previousSpotLightRange = spotLightRange;
+        //        Globals.ThisAddIn.Application.EnableEvents = true; //恢复响应事件          
+        //    }
+        //}
 
         public static void DeletePreviouSpotLightCondition()
         {

@@ -96,31 +96,15 @@ namespace kedouwenc
         [DllImport("user32.dll")] public static extern bool DestroyWindow(IntPtr hwnd);    
         public static IntPtr lHwndForm;
         public System.Drawing.Region lRgn;
-        [DllImport("user32.dll")] static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
-      
 
+        public static HighLight ihighlight;
         public void HighLight(Office.IRibbonControl control, Boolean pressed = true)
         {
             isnewpressed = pressed;
             if (isnewpressed)
             {
-                HighLight ihighlight = new HighLight();
-               
-                LightShine();
-
-                ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
-                System.Drawing.Rectangle LightRect = ihighlight.Bounds;
-
-                lRgn.Translate(-LightRect.Left, -LightRect.Top);
-                ihighlight.Region = lRgn;
-               
-                
-
-                Excel.Application xlapp = Globals.ThisAddIn.Application;
-                IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
-                SetWindowLong(ihighlight.Handle, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
-                ShowWindow(lHwndForm, 4);
-                //ihighlight.Show();
+                ihighlight = new HighLight();
+                LightShine();                
             }
             else
             {
@@ -137,6 +121,27 @@ namespace kedouwenc
             };
             getExcel7Rect();
             GetLightRgn();
+            
+            //ihighlight.Region = null;
+            ihighlight.SetDesktopBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6);
+            //ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
+            System.Drawing.Rectangle LightRect = ihighlight.Bounds;
+
+            lRgn.Translate(-LightRect.Left, -LightRect.Top);            
+            
+            ihighlight.Region = lRgn;
+           
+
+            ihighlight.BackColor = Color.Yellow;
+            lRgn.Dispose();
+
+            Excel.Application xlapp = Globals.ThisAddIn.Application;
+            IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
+            SetWindowLong(lHwndForm, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
+
+            ihighlight.Show();
+
+
         }
         public void GetPPI()
         {
@@ -293,8 +298,7 @@ namespace kedouwenc
                 {
                     oRect.Bottom = oXl7Rect.Bottom;
                 }
-                //lHRgn = CreateRectRgnIndirect(oRect);
-
+                
                 System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oRect.Right-oRect.Left, oRect.Bottom-oRect.Top);
                 System.Drawing.Region lHRgn = new System.Drawing.Region(rectangle1);
 
@@ -314,9 +318,12 @@ namespace kedouwenc
                 System.Drawing.Region lVRgn = new System.Drawing.Region(rectangle2);
 
                 lRgn.Union(lHRgn);
+                lHRgn.Dispose();
                 lRgn.Union(lVRgn);
-                
-                
+                lVRgn.Dispose();
+
+
+
             }
         }
 

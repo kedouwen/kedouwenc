@@ -14,11 +14,14 @@ namespace kedouwenc
         public HighLight()
         {
             InitializeComponent();
-            base.Opacity = 0.75;// Set the opacity to 75%.
+            base.Opacity = 0.25;// Set the opacity to 75%.
             Ribbon1.lHwndForm = this.Handle;
+           
+            
+           
+
+
         }
-
-
 
         protected override CreateParams CreateParams
         {
