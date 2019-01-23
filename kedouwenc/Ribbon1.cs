@@ -132,10 +132,14 @@ namespace kedouwenc
             //lRgn.Dispose();
 
             Excel.Application xlapp = Globals.ThisAddIn.Application;
-            IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
-            SetWindowLong(lHwndForm, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
+            //IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
+            //SetWindowLong(lHwndForm, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
 
-            ihighlight.Show();
+            ClsWinWrap clsWinWrap = new ClsWinWrap(xlapp.Hwnd);
+            
+                clsWinWrap.Show(ihighlight);
+
+            //ihighlight.Show();
 
         }
         public void GetPPI()

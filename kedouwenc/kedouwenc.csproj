@@ -225,6 +225,7 @@
     <Compile Include="BaiduAI.cs" />
     <Compile Include="BaiduAI_InterActive.cs" />
     <Compile Include="cellmeau.cs" />
+    <Compile Include="ClsWinWrap.cs" />
     <Compile Include="CreateJson.cs">
       <SubType>UserControl</SubType>
     </Compile>
