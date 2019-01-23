@@ -36,6 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(578, 273);
             this.Name = "HighLight";
+            this.ShowInTaskbar = false;
             this.Text = "HighLight";
             this.ResumeLayout(false);
 

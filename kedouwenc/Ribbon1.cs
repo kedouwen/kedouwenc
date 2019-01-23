@@ -90,7 +90,7 @@ namespace kedouwenc
         public const int RGN_OR = 2;
         public const int RGN_XOR = 3;
 
-        [DllImport("gdi32.dll")] static extern IntPtr CreateRectRgn(int X1, int Y1, int X2, int Y2);
+        //[DllImport("gdi32.dll")] static extern IntPtr CreateRectRgn(int X1, int Y1, int X2, int Y2);
         [DllImport("user32.dll")] static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         public const int GWL_HWNDPARENT = -8;
         [DllImport("user32.dll")] public static extern bool DestroyWindow(IntPtr hwnd);    
@@ -126,21 +126,16 @@ namespace kedouwenc
             ihighlight.SetDesktopBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6);
             //ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
             System.Drawing.Rectangle LightRect = ihighlight.Bounds;
-
-            lRgn.Translate(-LightRect.Left, -LightRect.Top);            
-            
-            ihighlight.Region = lRgn;
-           
-
+            lRgn.Translate(-LightRect.Left, -LightRect.Top);  
+            ihighlight.Region = lRgn;     
             ihighlight.BackColor = Color.Yellow;
-            lRgn.Dispose();
+            //lRgn.Dispose();
 
             Excel.Application xlapp = Globals.ThisAddIn.Application;
             IntPtr myhwnd = new IntPtr(xlapp.Hwnd);
             SetWindowLong(lHwndForm, GWL_HWNDPARENT, (int)myhwnd);//设置所有者窗口为Excel。You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function
 
             ihighlight.Show();
-
 
         }
         public void GetPPI()
