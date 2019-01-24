@@ -126,7 +126,7 @@ namespace kedouwenc
             //ihighlight.SetDesktopBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6);
             //ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
             System.Drawing.Rectangle LightRect = ihighlight.Bounds;
-            lRgn.Translate(-LightRect.Left-6, -LightRect.Top);
+            lRgn.Translate(-LightRect.Left, -LightRect.Top);
             ihighlight.Region = lRgn;
             ihighlight.BackColor = Color.Yellow;
 
@@ -306,9 +306,10 @@ namespace kedouwenc
                 System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, Convert.ToInt32(Math.Round(wd, MidpointRounding.AwayFromZero)), oXl7Rect.Bottom - oXl7Rect.Top+6);
                 System.Drawing.Region lVRgn = new System.Drawing.Region(rectangle2);
 
-                //lRgn.Union(lHRgn);
-                //lHRgn.Dispose();
+                lRgn.Union(lHRgn);
+                lHRgn.Dispose();
                 lRgn.Union(lVRgn);
+                //lRgn.Intersect(lVRgn);
                 lVRgn.Dispose();
 
 

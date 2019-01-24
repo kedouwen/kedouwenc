@@ -35,9 +35,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(578, 273);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "HighLight";
+            this.Opacity = 0.25D;
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "HighLight";
+            this.Text = "HighLight";           
             this.ResumeLayout(false);
 
         }

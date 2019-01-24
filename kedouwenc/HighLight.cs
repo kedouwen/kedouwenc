@@ -11,6 +11,10 @@ namespace kedouwenc
 {
     public partial class HighLight : Form
     {
+
+
+        //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        //win10显示有问题就是这个。指示窗体的边框和标题栏的外观和行为
         public HighLight()
         {
             InitializeComponent();
@@ -40,9 +44,6 @@ namespace kedouwenc
                 return CP;
             }
         }
-
-
-
 
     }
 }
