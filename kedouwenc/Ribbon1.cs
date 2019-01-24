@@ -168,6 +168,7 @@ namespace kedouwenc
             lhwndHscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "水平"); //水平滚动条的句柄
             lhwndVscrBar = FindWindowEx(lHwndExcel7, IntPtr.Zero, "NUIScrollbar", "垂直"); //垂直滚动条的句柄
 
+            //拆分相当于多个垂直滚动条和水平滚动条
             if (wn.Split)
             {
                 if (Convert.ToBoolean(wn.SplitRow))
@@ -177,7 +178,7 @@ namespace kedouwenc
 
                 if (Convert.ToBoolean(wn.SplitColumn))
                 {
-                    lhwndHscrBar = FindWindowEx((IntPtr)lHwndExcel7, (IntPtr)lhwndHscrBar, "NUIScrollbar", "水平"); //垂直滚动条的句柄
+                    lhwndHscrBar = FindWindowEx((IntPtr)lHwndExcel7, (IntPtr)lhwndHscrBar, "NUIScrollbar", "水平"); //水平滚动条的句柄
                 }
             }
 
@@ -198,8 +199,8 @@ namespace kedouwenc
             dynamic oRngVsbl = pn.VisibleRange.Cells[1];
 
 
-            oXl7Rect.Left = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px(oRngVsbl.Left), MidpointRounding.AwayFromZero));
-            oXl7Rect.Top = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRngVsbl.Top), MidpointRounding.AwayFromZero));
+            oXl7Rect.Left = Convert.ToInt32(Math.Round((double)pn.PointsToScreenPixelsX(oRngVsbl.Left), MidpointRounding.AwayFromZero));
+            oXl7Rect.Top = Convert.ToInt32(Math.Round((double)pn.PointsToScreenPixelsY(oRngVsbl.Top), MidpointRounding.AwayFromZero));
             oFstPnRect.Left = oXl7Rect.Left;
             oFstPnRect.Top = oXl7Rect.Top;
 
@@ -283,42 +284,55 @@ namespace kedouwenc
                 {
                     ht += pt2px(oRng.Rows[x].Height);
                 }
+
+                double wd = 0;
+                for (int y = 1; y <= oRng.Columns.Count; y++)
+                {
+                    wd += pt2px(oRng.Columns[y].Width);                    
+                }
+
+
                 //MessageBox.Show(oRng.address);
                 oRect.Left = oXl7Rect.Left;
-                oRect.Right = oXl7Rect.Right;
-                oRect.Top = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[1].Top), MidpointRounding.AwayFromZero));
-                oRect.Bottom = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[oRng.Rows.Count].Top) + pt2px(oRng.Rows[oRng.Rows.Count].Height), MidpointRounding.AwayFromZero));
+                //oRect.Right = oXl7Rect.Right;
+                //oRect.Top = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[1].Top), MidpointRounding.AwayFromZero));
+                //oRect.Bottom = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsY(0) + pt2px(oRng.Rows[oRng.Rows.Count].Top) + pt2px(oRng.Rows[oRng.Rows.Count].Height), MidpointRounding.AwayFromZero));
+                oRect.Top = Convert.ToInt32(Math.Round((double)pn.PointsToScreenPixelsY(oRng.Cells[1].Top) , MidpointRounding.AwayFromZero));
+                
 
                 if (oRect.Top < oXl7Rect.Top)
                 {
                     oRect.Top = oXl7Rect.Top;
                 }
-                if (oRect.Bottom > oXl7Rect.Bottom)
-                {
-                    oRect.Bottom = oXl7Rect.Bottom;
-                }
+                //if (oRect.Bottom > oXl7Rect.Bottom)
+                //{
+                //    oRect.Bottom = oXl7Rect.Bottom;
+                //}
                 
-                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oRect.Right-oRect.Left, oRect.Bottom-oRect.Top);
+                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oXl7Rect.Right- oXl7Rect.Left, (int)ht);
                 System.Drawing.Region lHRgn = new System.Drawing.Region(rectangle1);
 
                 oRect.Top = oXl7Rect.Top;
-                oRect.Bottom = oXl7Rect.Bottom;
-                oRect.Left = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px(oRng.Cells[1].Left), MidpointRounding.AwayFromZero));
-                oRect.Right = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px((double)oRng.Columns[oRng.Columns.Count].Left) + pt2px((double)oRng.Columns[oRng.Columns.Count].Width), MidpointRounding.AwayFromZero));
+                //oRect.Bottom = oXl7Rect.Bottom;
+                // oRect.Left = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px(oRng.Cells[1].Left), MidpointRounding.AwayFromZero));
+                //oRect.Right = Convert.ToInt32(Math.Round(pn.PointsToScreenPixelsX(0) + pt2px((double)oRng.Columns[oRng.Columns.Count].Left) + pt2px((double)oRng.Columns[oRng.Columns.Count].Width), MidpointRounding.AwayFromZero));
+                
+                oRect.Left = Convert.ToInt32(Math.Round((double)pn.PointsToScreenPixelsX(oRng.Cells[1].Left), MidpointRounding.AwayFromZero));
                 if (oRect.Left < oXl7Rect.Left)
                 {
                     oRect.Left = oXl7Rect.Left;
                 }
-                if (oRect.Right > oXl7Rect.Right)
-                {
-                    oRect.Right = oXl7Rect.Right;
-                }
-                System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oRect.Right - oRect.Left, oRect.Bottom - oRect.Top);
+                //if (oRect.Right > oXl7Rect.Right)
+                //{
+                //    oRect.Right = oXl7Rect.Right;
+                //}
+
+                System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, (int)wd, oXl7Rect.Bottom-oXl7Rect.Top);
                 System.Drawing.Region lVRgn = new System.Drawing.Region(rectangle2);
 
                 lRgn.Union(lHRgn);
                 lHRgn.Dispose();
-                lRgn.Union(lVRgn);
+               lRgn.Union(lVRgn);
                 lVRgn.Dispose();
 
 
