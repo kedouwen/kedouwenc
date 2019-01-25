@@ -24,9 +24,19 @@ namespace kedouwenc
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
+            Globals.ThisAddIn.Application.WindowResize += Application_WindowResize;
             cellmeau cell_meau = new cellmeau();
             cell_meau.cellmenu();
 
+        }
+
+        private void Application_WindowResize(Excel.Workbook Wb, Excel.Window Wn)
+        {
+            if (Ribbon1.isnewpressed)
+            {
+                Ribbon1 xlribbon = new Ribbon1();
+                xlribbon.LightShine();
+            }
         }
 
         void Application_SheetSelectionChange(object Sh, Excel.Range Target)
