@@ -114,6 +114,19 @@ namespace kedouwenc
 
         public void LightShine()
         {
+            try
+            {
+                Excel.Worksheet sht = Globals.ThisAddIn.Application.ActiveSheet;
+            }
+            catch
+            {
+                //if (sht.Type != Excel.XlSheetType.xlWorksheet) MessageBox.Show("请在工作表中使用行列高亮功能！"); }
+                MessageBox.Show("请在工作表中使用行列高亮功能！");
+                DestroyWindow(lHwndForm);
+                return;
+            }
+
+
 
             if (PPI == 0)
             {
@@ -122,7 +135,7 @@ namespace kedouwenc
             getExcel7Rect();
             GetLightRgn();
 
-            ihighlight.SetDesktopBounds(oXl7Rect.Left, oXl7Rect.Top , oXl7Rect.Right - oXl7Rect.Left , oXl7Rect.Bottom - oXl7Rect.Top);
+            ihighlight.SetDesktopBounds(oXl7Rect.Left, oXl7Rect.Top, oXl7Rect.Right - oXl7Rect.Left, oXl7Rect.Bottom - oXl7Rect.Top);
             //ihighlight.SetDesktopBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6);
             //ihighlight.SetBounds(oXl7Rect.Left - 3, oXl7Rect.Top - 3, oXl7Rect.Right - oXl7Rect.Left + 6, oXl7Rect.Bottom - oXl7Rect.Top + 6, 0);
             System.Drawing.Rectangle LightRect = ihighlight.Bounds;
@@ -157,8 +170,10 @@ namespace kedouwenc
             IntPtr lHwndXlDesk, lhwndHscrBar, lhwndVscrBar;
             RECT oHScrBarRect = new RECT();
             RECT oVScrBarRect = new RECT();
-            
             Excel.Window wn = Globals.ThisAddIn.Application.ActiveWindow;
+
+
+
             iZoom = (int)wn.Zoom; //获取窗口显示比例
             IntPtr myhwnd = new IntPtr(Globals.ThisAddIn.Application.Hwnd);
             lHwndXlDesk = FindWindowEx(myhwnd, IntPtr.Zero, "XLDESK", null);
@@ -194,7 +209,7 @@ namespace kedouwenc
                 oXl7Rect.Right = oHScrBarRect.Right;
             }
 
-            Excel.Pane pn = wn.Panes[1]; 
+            Excel.Pane pn = wn.Panes[1];
             Excel.Range oRngVsbl = pn.VisibleRange.Cells[1];
 
             oXl7Rect.Left = pn.PointsToScreenPixelsX(oRngVsbl.Left);
@@ -235,8 +250,8 @@ namespace kedouwenc
         {
             RECT oPnRect = new RECT();
             Excel.Application xlapp = Globals.ThisAddIn.Application;
-            Excel.Window Wn = xlapp.ActiveWindow;          
-           
+            Excel.Window Wn = xlapp.ActiveWindow;
+
             lRgn = new System.Drawing.Region(new System.Drawing.Rectangle(0, 0, 0, 0));
             Excel.Range oRange = xlapp.ActiveWindow.RangeSelection.Areas[1];
 
@@ -285,15 +300,15 @@ namespace kedouwenc
                 {
                     wd += pt2px(oRng.Columns[y].Width);
                 }
-                
-                oRect.Left = oXl7Rect.Left;               
+
+                oRect.Left = oXl7Rect.Left;
                 oRect.Top = pn.PointsToScreenPixelsY(oRng.Cells[1].Top);
                 if (oRect.Top < oXl7Rect.Top)
                 {
                     oRect.Top = oXl7Rect.Top;
-                }             
+                }
 
-                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oXl7Rect.Right - oXl7Rect.Left+6, Convert.ToInt32(Math.Round(ht, MidpointRounding.AwayFromZero)));
+                System.Drawing.Rectangle rectangle1 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, oXl7Rect.Right - oXl7Rect.Left + 6, Convert.ToInt32(Math.Round(ht, MidpointRounding.AwayFromZero)));
                 System.Drawing.Region lHRgn = new System.Drawing.Region(rectangle1);
 
                 oRect.Top = oXl7Rect.Top;
@@ -301,9 +316,9 @@ namespace kedouwenc
                 if (oRect.Left < oXl7Rect.Left)
                 {
                     oRect.Left = oXl7Rect.Left;
-                }                               
+                }
 
-                System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, Convert.ToInt32(Math.Round(wd, MidpointRounding.AwayFromZero)), oXl7Rect.Bottom - oXl7Rect.Top+6);
+                System.Drawing.Rectangle rectangle2 = new System.Drawing.Rectangle(oRect.Left, oRect.Top, Convert.ToInt32(Math.Round(wd, MidpointRounding.AwayFromZero)), oXl7Rect.Bottom - oXl7Rect.Top + 6);
                 System.Drawing.Region lVRgn = new System.Drawing.Region(rectangle2);
 
                 lRgn.Union(lHRgn);

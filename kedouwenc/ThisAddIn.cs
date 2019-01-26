@@ -25,16 +25,27 @@ namespace kedouwenc
         {
             Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
             Globals.ThisAddIn.Application.WindowResize += Application_WindowResize;
+            Globals.ThisAddIn.Application.SheetActivate += Application_SheetActivate;
             cellmeau cell_meau = new cellmeau();
             cell_meau.cellmenu();
 
         }
+        Ribbon1 xlribbon = new Ribbon1();
+        private void Application_SheetActivate(object Sh)
+        {
+            if (Ribbon1.isnewpressed)
+            {
+                xlribbon.LightShine();
+            }
+        }
+        
+        
+       
 
         private void Application_WindowResize(Excel.Workbook Wb, Excel.Window Wn)
         {
             if (Ribbon1.isnewpressed)
-            {
-                Ribbon1 xlribbon = new Ribbon1();
+            {                
                 xlribbon.LightShine();
             }
         }
@@ -44,7 +55,6 @@ namespace kedouwenc
             // MessageBox.Show(Convert.ToString(Ribbon1.ispressed));
             if (Ribbon1.isnewpressed)
             {
-                Ribbon1 xlribbon = new Ribbon1();
                 xlribbon.LightShine();
             }
         }
@@ -89,18 +99,18 @@ namespace kedouwenc
         //    }
         //}
 
-        public static void DeletePreviouSpotLightCondition()
-        {
-            if (previousSpotLightRange != null)
-            {
-                Excel.FormatCondition previousFormatCondition = previousSpotLightRange.FormatConditions[1];
-                if (previousFormatCondition.Formula1 == "=TRUE")
-                {
-                    previousFormatCondition.Delete();
-                }
-                previousSpotLightRange = null;
-            }
-        }
+        //public static void DeletePreviouSpotLightCondition()
+        //{
+        //    if (previousSpotLightRange != null)
+        //    {
+        //        Excel.FormatCondition previousFormatCondition = previousSpotLightRange.FormatConditions[1];
+        //        if (previousFormatCondition.Formula1 == "=TRUE")
+        //        {
+        //            previousFormatCondition.Delete();
+        //        }
+        //        previousSpotLightRange = null;
+        //    }
+        //}
 
 
 
