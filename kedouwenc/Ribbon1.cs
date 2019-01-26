@@ -40,8 +40,8 @@ namespace kedouwenc
 {
     [ComVisible(true)]
     public class Ribbon1 : Office.IRibbonExtensibility
-    {
-        private Office.IRibbonUI ribbon;
+    {        
+        private static Office.IRibbonUI ribbon;
         public static string gifid = "";
         public static Boolean ispressed;
         public static Boolean isnewpressed;
@@ -60,6 +60,11 @@ namespace kedouwenc
             //
         }
 
+
+        public bool HigtLigth_GetPressed(Office.IRibbonControl control)
+        {
+            return isnewpressed;
+        }
         /// <summary>
         /// 阅读模式
         /// </summary>
@@ -73,7 +78,6 @@ namespace kedouwenc
 
 
         public int PPI, iZoom;
-
         public struct RECT
         {
             public int Left;
@@ -100,6 +104,7 @@ namespace kedouwenc
         public static HighLight ihighlight;
         public void HighLight(Office.IRibbonControl control, Boolean pressed = true)
         {
+            
             isnewpressed = pressed;
             if (isnewpressed)
             {
@@ -122,6 +127,8 @@ namespace kedouwenc
             {
                 //if (sht.Type != Excel.XlSheetType.xlWorksheet) MessageBox.Show("请在工作表中使用行列高亮功能！"); }
                 MessageBox.Show("请在工作表中使用行列高亮功能！");
+                isnewpressed=false;                                
+                ribbon.InvalidateControl("HighLight");
                 DestroyWindow(lHwndForm);
                 return;
             }
@@ -1322,9 +1329,9 @@ namespace kedouwenc
         /// </summary>
         /// <param name="ribbonUI"></param>
         public void Ribbon_Load(Office.IRibbonUI ribbonUI)
-        {
-            timer.Interval = 1000;// 一秒=1000ms,以ms为单位的
-            this.ribbon = ribbonUI;
+        {            
+            timer.Interval = 1000;// 一秒=1000ms,以ms为单位的            
+            ribbon = ribbonUI;
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
@@ -1341,7 +1348,7 @@ namespace kedouwenc
             //https://msdn.microsoft.com/en-us/library/aa433553(v=office.12).aspx
             //Invalidates the cached value for a single control on the Ribbon user interface.
         }
-
+        
         #endregion
 
         #region Helpers

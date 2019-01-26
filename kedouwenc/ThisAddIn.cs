@@ -20,7 +20,7 @@ namespace kedouwenc
     public partial class ThisAddIn
     {
 
-        static Excel.Range previousSpotLightRange;
+        //static Excel.Range previousSpotLightRange;
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
@@ -39,9 +39,6 @@ namespace kedouwenc
             }
         }
         
-        
-       
-
         private void Application_WindowResize(Excel.Workbook Wb, Excel.Window Wn)
         {
             if (Ribbon1.isnewpressed)
