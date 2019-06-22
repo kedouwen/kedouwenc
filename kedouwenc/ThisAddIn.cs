@@ -26,10 +26,22 @@ namespace kedouwenc
             Globals.ThisAddIn.Application.SheetSelectionChange += new Excel.AppEvents_SheetSelectionChangeEventHandler(Application_SheetSelectionChange);
             Globals.ThisAddIn.Application.WindowResize += Application_WindowResize;
             Globals.ThisAddIn.Application.SheetActivate += Application_SheetActivate;
-            cellmeau cell_meau = new cellmeau();
-            cell_meau.cellmenu();
+
+
+
+            //加入事件是为了在多个工作簿里面都可以使用。
+            Globals.ThisAddIn.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
+
+          
 
         }
+
+        private void Application_SheetBeforeRightClick(object Sh, Excel.Range Target, ref bool Cancel)
+        {
+            cellmeau cell_meau = new cellmeau();
+            cell_meau.cellmenu();
+        }
+
         Ribbon1 xlribbon = new Ribbon1();
         private void Application_SheetActivate(object Sh)
         {

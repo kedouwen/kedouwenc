@@ -33,8 +33,9 @@ namespace kedouwenc
                 cell_meau_btn_upper = (Office.CommandBarButton)cell_meau.Controls.Add(Type: Office.MsoControlType.msoControlButton);
                 cell_meau_btn_upper.Caption = "转成大写";
                 cell_meau_btn_upper.FaceId = 80;
-                cell_meau_btn_upper.Click += cell_meau_btn_upper_Click;
+                //cell_meau_btn_upper.Click += cell_meau_btn_upper_Click;
 
+                cell_meau_btn_upper.Click += new Office._CommandBarButtonEvents_ClickEventHandler(cell_meau_btn_upper_Click);
                 cell_meau_btn_lower = (Office.CommandBarButton)cell_meau.Controls.Add(Type: Office.MsoControlType.msoControlButton);
                 cell_meau_btn_lower.Caption = "转成小写";
                 cell_meau_btn_lower.FaceId = 81;
